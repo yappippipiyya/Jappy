@@ -1,0 +1,43 @@
+.flash-message {
+  padding: 1rem;
+  margin: 1rem 0;
+  border: 1px solid transparent;
+  border-radius: .25rem;
+}
+.flash-message.warning {
+  color: #856404;
+  background-color: #fff3cd;
+  border-color: #ffeeba;
+}
+
+.login-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+#login-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+
+  background-color: #ffffff;
+  color: #444444;
+  border: 1px solid #dddddd;
+  border-radius: 50vh;
+  padding: 10px 24px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  font-weight: 500;
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+#login-btn:hover {
+  background-color: #f8f8f8;
+  border-color: #cccccc;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.google-icon {
+  vertical-align: middle;
+}
