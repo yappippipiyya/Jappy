@@ -17,8 +17,6 @@ GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET")
 REDIRECT_URI = os.environ.get("REDIRECT_URI")
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
-DATABASE_URL = os.getenv("DATABASE_URL", "")
-
 HOST = os.getenv("host", "")
 USER = os.getenv("user", "")
 PASSWORD = os.getenv("password", "")
