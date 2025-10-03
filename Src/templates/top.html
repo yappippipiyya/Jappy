@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+
+  <title>トップ</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/top.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="header-container">
+      <a href="{{ url_for('top') }}" class="site-logo">
+        <img src="{{ url_for('static', filename='icons/favicon.png') }}" alt="ロゴ" class="logo-image">
+        <span>Jappy</span>
+      </a>
+    </div>
+  </header>
+
+
+  <main class="container">
+    <nav class="main-navigation">
+      <a href="band-gen" class="nav-link">
+        <span class="material-symbols-outlined">group_add</span>
+        バンド作成
+      </a>
+
+      <a href="schedule-manage" class="nav-link">
+        <span class="material-symbols-outlined">event_note</span>
+        予定管理
+      </a>
+
+      <a href="hands" class="nav-link">
+        <span class="material-symbols-outlined">groups</span>
+        バンド一覧
+      </a>
+
+      <!-- ログアウト -->
+      <a href="logout" class="nav-link logout">
+        <span class="material-symbols-outlined">logout</span>
+        ログアウト
+      </a>
+    </nav>
+  </main>
+
+</body>
+</html>

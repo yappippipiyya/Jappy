@@ -1,6 +1,8 @@
 import pymysql
 from .base import _get_connection
 
+
+
 class User:
   """ ユーザー情報を格納するためのデータクラス """
   # DBのカラム名 'id' に合わせました
