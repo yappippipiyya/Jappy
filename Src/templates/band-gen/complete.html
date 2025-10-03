@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>バンド作成完了</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/band-gen.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-container">
+      <a href="{{ url_for('top') }}" class="site-logo">
+        <img src="{{ url_for('static', filename='icons/favicon.png') }}" alt="ロゴ" class="logo-image">
+        <span>Jappy</span>
+      </a>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="complete-container">
+      <span class="material-symbols-outlined check-icon">check_circle</span>
+      <h2>バンド「{{ band_name }}」を作成しました！</h2>
+      <p>以下の招待URLをコピーして、メンバーに共有してください。</p>
+      
+      <div class="url-copy-wrapper">
+        <input type="text" id="invite-url" value="{{ invite_url }}" readonly>
+        <button id="copy-button" onclick="copyUrl()">コピー</button>
+      </div>
+      <p id="copy-feedback" class="copy-feedback"></p>
+
+      <a href="{{ url_for('top') }}" class="back-link">トップページへ戻る</a>
+    </div>
+  </main>
+
+  <script>
+    function copyUrl() {
+      const urlInput = document.getElementById('invite-url');
+      urlInput.select();
+      navigator.clipboard.writeText(urlInput.value).then(() => {
+        const feedback = document.getElementById('copy-feedback');
+        feedback.textContent = 'コピーしました！';
+        setTimeout(() => {
+          feedback.textContent = '';
+        }, 2000);
+      }).catch(err => {
+        console.error('コピーに失敗しました', err);
+        const feedback = document.getElementById('copy-feedback');
+        feedback.textContent = 'コピーに失敗しました';
+      });
+    }
+  </script>
+</body>
+</html>

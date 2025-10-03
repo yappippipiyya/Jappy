@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>バンド作成</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/band-gen/band-gen.css') }}">
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-container">
+      <a href="{{ url_for('top') }}" class="site-logo">
+        <img src="{{ url_for('static', filename='icons/favicon.png') }}" alt="ロゴ" class="logo-image">
+        <span>Jappy</span>
+      </a>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="form-container">
+      <h2>バンド作成</h2>
+      <p>新しいバンドを作成してメンバーを招待しましょう。</p>
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div class="flash-messages">
+          {% for category, message in messages %}
+            <div class="flash {{ category }}">{{ message }}</div>
+          {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+
+      <form method="POST" action="{{ url_for('band_gen') }}">
+        <div class="form-group">
+          <label for="band-name">バンド名</label>
+          <input type="text" id="band-name" name="band-name" required>
+        </div>
+
+        <div class="form-group-row">
+          <div class="form-group">
+            <label for="start-date">練習開始日</label>
+            <input type="date" id="start-date" name="start-date" required>
+          </div>
+          <div class="form-group">
+            <label for="end-date">練習終了日</label>
+            <input type="date" id="end-date" name="end-date" required>
+          </div>
+        </div>
+
+        <div class="form-group-row">
+          <div class="form-group">
+            <label for="start-time">開始時刻</label>
+            <select id="start-time" name="start-time" required>
+              {% for h in range(24) %}
+              <option value="{{ '%02d'|format(h) }}:00">{{ '%02d'|format(h) }}:00</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="end-time">終了時刻</label>
+            <select id="end-time" name="end-time" required>
+              {% for h in range(24) %}
+              <option value="{{ '%02d'|format(h) }}:00">{{ '%02d'|format(h) }}:00</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+
+        <button type="submit" class="submit-btn">作成する</button>
+      </form>
+    </div>
+  </main>
+</body>
+</html>

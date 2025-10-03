@@ -35,7 +35,7 @@ class BandDatabaseManager:
     return token
 
 
-  def create_band(self, name: str, start_date: date, end_date: date, start_time: time, end_time: time) -> tuple[int, str] | None:
+  def create_band(self, name: str, start_date: date, end_date: date, start_time: time, end_time: time, creator_user_id: int) -> tuple[int, str] | None:
     """
     新しいバンドを作成し、そのIDとトークンを返す
     トークンは自動生成される
@@ -49,11 +49,39 @@ class BandDatabaseManager:
       with self._get_connection() as conn:
         with conn.cursor() as cur:
           cur.execute(sql, (name, token, start_date, end_date, start_time, end_time))
+          new_band_id = cur.lastrowid
+          if not new_band_id:
+            raise pymysql.Error("バンドの作成に失敗しました。")
+
+          # band_userテーブルに作成者を追加
+          member_sql = "INSERT INTO band_user (user_id, band_id) VALUES (%s, %s);"
+          cur.execute(member_sql, (creator_user_id, new_band_id))
+
           conn.commit()
           return cur.lastrowid, token
+
     except pymysql.Error as e:
       print(f"データベースエラーが発生しました: {e}")
       return None
+
+
+  def add_member_to_band(self, user_id: int, band_id: int) -> bool:
+    """ ユーザーをバンドのメンバーとして追加する """
+    sql = "INSERT INTO band_user (user_id, band_id) VALUES (%s, %s);"
+    try:
+      with self._get_connection() as conn:
+        with conn.cursor() as cur:
+          cur.execute(sql, (user_id, band_id))
+          conn.commit()
+          return True
+
+    except pymysql.IntegrityError:
+        print("ユーザーは既にこのバンドのメンバーです。")
+        return False
+
+    except pymysql.Error as e:
+      print(f"データベースエラーが発生しました: {e}")
+      return False
 
 
   def get_band_by_id(self, band_id: int) -> Band | None:
