@@ -19,7 +19,7 @@ def band_gen():
     end_time_str = request.form.get("end-time")
 
     # 簡単なバリデーション
-    if not all([band_name, start_date_str, end_date_str, start_time_str, end_time_str]):
+    if not (band_name and start_date_str and end_date_str and start_time_str and end_time_str):
       flash("すべての項目を入力してください。", "error")
       return redirect(url_for("band_gen"))
 
@@ -52,20 +52,32 @@ def band_gen():
     )
 
     if token:
-      # 成功した場合、完全な招待URLを生成して完了ページを表示
-      invite_url = url_for('join_band', token=token, _external=True)
-      return render_template("band-gen/band-gen-complete.html", invite_url=invite_url, band_name=band_name)
+      return redirect(url_for("bands_list"))
+
     else:
-      # 失敗した場合
       flash("バンドの作成に失敗しました。もう一度お試しください。", "error")
       return redirect(url_for("band_gen"))
 
   # GETリクエストの場合は作成フォームを表示
-  return render_template("band-gen/band-gen.html")
+  return render_template("band/band-gen.html")
 
 
-# 招待URLにアクセスしたときの処理
 @app.route("/bands")
+@login_required
+def bands_list():
+  user_db = UserDatabaseManager()
+  user = user_db.get_user_by_email(current_user.get_id())
+  if not user:
+    return redirect(url_for("logout"))
+
+  # db/band.py に get_bands_by_user_id メソッドが別途必要
+  band_db = BandDatabaseManager()
+  bands = band_db.get_bands_by_user_id(user.id) # ユーザーIDで所属バンドを取得
+
+  return render_template("band/bands.html", bands=bands)
+
+
+@app.route("/join")
 @login_required
 def join_band():
   token = request.args.get('token')
@@ -82,13 +94,12 @@ def join_band():
   if not user:
     return redirect(url_for("logout"))
 
-  # ユーザーをバンドメンバーに追加
   success = band_db.add_member_to_band(user.id, band.id)
 
   if success:
     flash(f"バンド「{band.name}」に参加しました！", "success")
   else:
     flash(f"すでにバンド「{band.name}」のメンバーです。", "info")
-
-  # バンド一覧ページなどにリダイレクト（ここではトップページにリダイレクト）
-  return redirect(url_for('top'))
+  
+  # 参加処理が終わったら、新しく作ったバンド一覧ページにリダイレクト
+  return redirect(url_for('bands_list'))

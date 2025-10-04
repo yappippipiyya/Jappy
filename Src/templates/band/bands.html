@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>参加バンド一覧</title>
+
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/band/bands.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="header-container">
+      <a href="{{ url_for('top') }}" class="site-logo">
+        <img src="{{ url_for('static', filename='icons/favicon.png') }}" alt="ロゴ" class="logo-image">
+        <span>Jappy</span>
+      </a>
+    </div>
+  </header>
+
+  <div class="bands-container">
+    <h2>参加バンド一覧</h2>
+    <p>あなたが参加しているバンドの一覧です。新しいメンバーを招待するには、招待URLをコピーして共有してください。</p>
+
+    {# flashメッセージの表示 #}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash-messages">
+          {% for category, message in messages %}
+            <div class="flash {{ category }}">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <div class="band-list">
+      {% if bands %}
+        {% for band in bands %}
+          <div class="band-card">
+            <div class="band-info">
+              <h3 class="band-name">{{ band.name }}</h3>
+              <p class="band-period">
+                <span class="label">期間:</span> {{ band.start_date.strftime('%Y/%m/%d') }} - {{ band.end_date.strftime('%Y/%m/%d') }}
+              </p>
+              <p class="band-time">
+                <span class="label">時間:</span> {{ band.start_time }} - {{ band.end_time }}
+              </p>
+            </div>
+            <div class="band-actions">
+              <div class="url-copy-wrapper">
+                <!-- このinputタグはCSSで非表示にします -->
+                <input type="text" value="{{ request.url_root }}join?token={{ band.token }}" readonly>
+                <button class="copy-btn" title="招待URLをコピー">
+                  <span class="material-icons">content_copy</span>
+                </button>
+              </div>
+              <p class="copy-feedback"></p>
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <p class="no-bands-message">現在参加しているバンドはありません。</p>
+      {% endif %}
+    </div>
+    
+    <a href="{{ url_for('band_gen') }}" class="back-link">新しいバンドを作成する</a>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/bands.js') }}"></script>
+</body>
+</html>

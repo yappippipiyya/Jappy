@@ -110,3 +110,25 @@ class BandDatabaseManager:
     except pymysql.Error as e:
       print(f"データベースエラーが発生しました: {e}")
       return None
+
+
+  def get_bands_by_user_id(self, user_id: int) -> list[Band]:
+    """ 指定されたユーザーが所属する全てのバンド情報をリストで取得する """
+    sql = """
+      SELECT b.*
+      FROM bands b
+      JOIN band_user bu ON b.id = bu.band_id
+      WHERE bu.user_id = %s
+      ORDER BY b.id DESC;
+    """
+    bands_list: list[Band] = []
+    try:
+      with self._get_connection() as conn:
+        with conn.cursor() as cur:
+          cur.execute(sql, (user_id,))
+          results = cur.fetchall()
+          for row in results:
+            bands_list.append(Band(**row))
+    except pymysql.Error as e:
+      print(f"データベースエラーが発生しました: {e}")
+    return bands_list
