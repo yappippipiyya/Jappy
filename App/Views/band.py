@@ -3,8 +3,8 @@ from flask_login import login_required, current_user
 from datetime import datetime
 
 from ..app_init_ import app
-from ..db.user import UserDatabaseManager
-from ..db.band import BandDatabaseManager
+from ..db.user import User, UserDatabaseManager
+from ..db.band import Band, BandDatabaseManager
 
 # バンド作成フォームの表示と、フォーム送信の処理
 @app.route("/band-gen", methods=["GET", "POST"])
@@ -35,14 +35,14 @@ def band_gen():
 
     # ログイン中のユーザー情報を取得
     user_db = UserDatabaseManager()
-    user = user_db.get_user_by_email(current_user.get_id())
+    user = user_db.get_user(email=current_user.get_id())
     if not user:
       # ユーザー情報が取得できなければエラーハンドリング（例: ログアウト）
       return redirect(url_for("logout"))
 
     # データベースにバンドを作成し、作成者をメンバーに追加
     band_db = BandDatabaseManager()
-    token = band_db.create_band(
+    token = band_db.create(
       name=band_name,
       start_date=start_date,
       end_date=end_date,
@@ -66,15 +66,16 @@ def band_gen():
 @login_required
 def bands_list():
   user_db = UserDatabaseManager()
-  user = user_db.get_user_by_email(current_user.get_id())
+  user = user_db.get_user(email=current_user.get_id())
   if not user:
     return redirect(url_for("logout"))
 
   # db/band.py に get_bands_by_user_id メソッドが別途必要
   band_db = BandDatabaseManager()
-  bands = band_db.get_bands_by_user_id(user.id) # ユーザーIDで所属バンドを取得
+  bands = band_db.get_bands(user_id=user.id) # ユーザーIDで所属バンドを取得
+  users_dict = {band.id: ", ".join([user.name for user in band_db.get_users(band.id)]) for band in bands}
 
-  return render_template("band/bands.html", bands=bands)
+  return render_template("band/bands.html", bands=bands, users_dict=users_dict)
 
 
 @app.route("/join")
@@ -85,16 +86,16 @@ def join_band():
     abort(400, "招待トークンが必要です。")
 
   band_db = BandDatabaseManager()
-  band = band_db.get_band_by_token(token)
+  band = band_db.get_band(token=token)
   if not band:
     abort(404, "指定されたバンドが見つかりません。")
 
   user_db = UserDatabaseManager()
-  user = user_db.get_user_by_email(current_user.get_id())
+  user = user_db.get_user(email=current_user.get_id())
   if not user:
     return redirect(url_for("logout"))
 
-  success = band_db.add_member_to_band(user.id, band.id)
+  success = band_db.add_member(user.id, band.id)
 
   if success:
     flash(f"バンド「{band.name}」に参加しました！", "success")

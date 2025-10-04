@@ -4,6 +4,7 @@ import secrets
 import string
 
 from .base import _get_connection
+from .user import User
 
 
 
@@ -35,7 +36,7 @@ class BandDatabaseManager:
     return token
 
 
-  def create_band(self, name: str, start_date: date, end_date: date, start_time: time, end_time: time, creator_user_id: int) -> tuple[int, str] | None:
+  def create(self, name: str, start_date: date, end_date: date, start_time: time, end_time: time, creator_user_id: int) -> tuple[int, str] | None:
     """
     新しいバンドを作成し、そのIDとトークンを返す
     トークンは自動生成される
@@ -65,7 +66,7 @@ class BandDatabaseManager:
       return None
 
 
-  def add_member_to_band(self, user_id: int, band_id: int) -> bool:
+  def add_member(self, user_id: int, band_id: int) -> bool:
     """ ユーザーをバンドのメンバーとして追加する """
     sql = "INSERT INTO band_user (user_id, band_id) VALUES (%s, %s);"
     try:
@@ -84,13 +85,23 @@ class BandDatabaseManager:
       return False
 
 
-  def get_band_by_id(self, band_id: int) -> Band | None:
-    """ idを指定して単一のバンド情報を取得する """
-    sql = "SELECT id, name, token, start_date, end_date, start_time, end_time FROM bands WHERE id = %s;"
+  def get_band(self, band_id: int | None = None, token: str | None = None) -> Band | None:
+    """ id, tokenを指定して単一のバンド情報を取得する """
+    if band_id:
+      sql = "SELECT id, name, token, start_date, end_date, start_time, end_time FROM bands WHERE id = %s;"
+      args = band_id
+
+    elif token:
+      sql = "SELECT id, name, token, start_date, end_date, start_time, end_time FROM bands WHERE token = %s;"
+      args = token
+
+    else:
+      return None
+
     try:
       with self._get_connection() as conn:
         with conn.cursor() as cur:
-          cur.execute(sql, (band_id,))
+          cur.execute(sql, (args,))
           result = cur.fetchone()
           return Band(**result) if result else None
     except pymysql.Error as e:
@@ -98,21 +109,7 @@ class BandDatabaseManager:
       return None
 
 
-  def get_band_by_token(self, token: str) -> Band | None:
-    """ tokenを指定して単一のバンド情報を取得する """
-    sql = "SELECT id, name, token, start_date, end_date, start_time, end_time FROM bands WHERE token = %s;"
-    try:
-      with self._get_connection() as conn:
-        with conn.cursor() as cur:
-          cur.execute(sql, (token,))
-          result = cur.fetchone()
-          return Band(**result) if result else None
-    except pymysql.Error as e:
-      print(f"データベースエラーが発生しました: {e}")
-      return None
-
-
-  def get_bands_by_user_id(self, user_id: int) -> list[Band]:
+  def get_bands(self, user_id: int) -> list[Band]:
     """ 指定されたユーザーが所属する全てのバンド情報をリストで取得する """
     sql = """
       SELECT b.*
@@ -132,3 +129,27 @@ class BandDatabaseManager:
     except pymysql.Error as e:
       print(f"データベースエラーが発生しました: {e}")
     return bands_list
+
+
+  def get_users(self, band_id: int) -> list[User]:
+    """
+    指定されたバンドIDに所属する全てのユーザー情報をリストで取得する
+    """
+    sql = """
+      SELECT u.id, u.email, u.name
+      FROM users u
+      JOIN band_user bu ON u.id = bu.user_id
+      WHERE bu.band_id = %s;
+    """
+    users_list: list[User] = []
+    try:
+      with self._get_connection() as conn:
+        with conn.cursor() as cur:
+          cur.execute(sql, (band_id,))
+          results = cur.fetchall()
+          for row in results:
+            # Userクラスのインスタンスを作成してリストに追加
+            users_list.append(User(**row))
+    except pymysql.Error as e:
+      print(f"データベースエラーが発生しました: {e}")
+    return users_list

@@ -79,7 +79,7 @@ h2 {
 .band-info .label {
   font-weight: bold;
   display: inline-block;
-  width: 50px; /* "期間:", "時間:"の幅を揃える */
+  width: 70px; /* "期間:", "時間:"の幅を揃える */
 }
 
 

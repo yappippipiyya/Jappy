@@ -59,7 +59,7 @@ def logout():
 def top():
   user_db = UserDatabaseManager()
   user_email = current_user.get_id()
-  user = user_db.get_user_by_email(user_email)
+  user = user_db.get_user(email=user_email)
 
   if not user:
     return redirect(url_for("resist"))
@@ -73,7 +73,7 @@ def resist():
   user_db = UserDatabaseManager()
   user_email = current_user.get_id()
 
-  if user_db.get_user_by_email(user_email):
+  if user_db.get_user(email=user_email):
     return redirect(url_for("top"))
 
   if request.method == "POST":
@@ -83,7 +83,7 @@ def resist():
       flash("ニックネームを入力してください。", "error")
       return redirect(url_for("resist"))
 
-    new_user_id = user_db.add_user(email=user_email, name=nickname.strip())
+    new_user_id = user_db.add(email=user_email, name=nickname.strip())
 
     if new_user_id:
       return redirect(url_for("top"))

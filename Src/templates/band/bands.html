@@ -47,6 +47,9 @@
               <p class="band-time">
                 <span class="label">時間:</span> {{ band.start_time }} - {{ band.end_time }}
               </p>
+              <p class="members">
+                <span class="label">メンバー:</span> {{ users_dict[band.id] }}
+              </p>
             </div>
             <div class="band-actions">
               <div class="url-copy-wrapper">
