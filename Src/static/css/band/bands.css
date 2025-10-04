@@ -1,3 +1,8 @@
+/*
+ * ----------------------------------------------------------------
+ * コンテナ全体
+ * ----------------------------------------------------------------
+ */
 .bands-container {
   max-width: 800px;
   margin: 0 auto;
@@ -5,40 +10,50 @@
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+
+  h2 {
+    margin-bottom: 10px;
+    color: #2c3e50;
+    text-align: center;
+  }
+
+  > p {
+    margin-bottom: 30px;
+    color: #7f8c8d;
+    text-align: center;
+  }
 }
 
-h2 {
-  text-align: center;
-  margin-bottom: 10px;
-  color: #2c3e50;
-}
-
-.bands-container > p {
-  text-align: center;
-  color: #7f8c8d;
-  margin-bottom: 30px;
-}
-
-/* Flashメッセージ */
+/*
+ * ----------------------------------------------------------------
+ * Flashメッセージ
+ * ----------------------------------------------------------------
+ */
 .flash-messages {
   margin-bottom: 20px;
-}
-.flash {
-  padding: 10px 15px;
-  border-radius: 4px;
-  text-align: center;
-}
-.flash.success {
-  background-color: #d4edda;
-  color: #155724;
-}
-.flash.error {
-  background-color: #f8d7da;
-  color: #721c24;
+
+  .flash {
+    padding: 10px 15px;
+    border-radius: 4px;
+    text-align: center;
+
+    &.success {
+      color: #155724;
+      background-color: #d4edda;
+    }
+
+    &.error {
+      color: #721c24;
+      background-color: #f8d7da;
+    }
+  }
 }
 
-
-/* バンドカードのデザイン */
+/*
+ * ----------------------------------------------------------------
+ * バンドリスト
+ * ----------------------------------------------------------------
+ */
 .band-list {
   display: flex;
   flex-direction: column;
@@ -47,111 +62,119 @@ h2 {
 
 .band-card {
   display: flex;
-  justify-content: space-between; /* 情報とボタンを両端に配置 */
-  align-items: center; /* 垂直方向中央揃え */
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
   background-color: #fdfdfd;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
-  padding: 15px 20px;
-  transition: box-shadow 0.2s ease-in-out;
-}
-
-.band-card:hover {
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-}
-
-.band-info {
-  flex-grow: 1; /* 左側の情報エリアがスペースを埋める */
-}
-
-.band-name {
-  margin: 0 0 10px 0;
-  font-size: 1.2em;
-  color: #34495e;
-}
-
-.band-info p {
-  margin: 4px 0;
-  font-size: 0.9em;
-  color: #555;
-}
-
-.band-info .label {
-  font-weight: bold;
-  display: inline-block;
-  width: 70px; /* "期間:", "時間:"の幅を揃える */
-}
-
-
-/* アクション（コピーボタン）エリア */
-.band-actions {
-  position: relative; /* フィードバックメッセージの基準位置 */
-  flex-shrink: 0; /* ボタンが縮まないようにする */
-  margin-left: 20px;
-}
-
-.url-copy-wrapper input[type="text"] {
-  display: none; /* inputを非表示にする */
-}
-
-.copy-btn {
-  background: none;
-  border: none;
   cursor: pointer;
-  padding: 8px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background-color 0.2s;
+  transition: box-shadow 0.2s ease-in-out;
+
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  /* --- カード左側：バンド情報 --- */
+  .band-info {
+    flex-grow: 1;
+
+    .band-name {
+      margin: 0 0 10px 0;
+      font-size: 1.2em;
+      color: #34495e;
+    }
+
+    p {
+      margin: 4px 0;
+      font-size: 0.9em;
+      color: #555;
+    }
+
+    .label {
+      display: inline-block;
+      width: 70px; /* "期間:", "時間:"の幅を揃える */
+      font-weight: bold;
+    }
+  }
+
+  /* --- カード右側：アクションボタン --- */
+  .band-actions {
+    position: relative; /* フィードバックメッセージの基準位置 */
+    flex-shrink: 0; /* ボタンが縮まないようにする */
+    margin-left: 20px;
+    cursor: default; /* このエリアはデフォルトカーソル */
+
+    input[type="text"] {
+      display: none; /* inputは非表示 */
+    }
+
+    .copy-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px;
+      background: none;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer; /* ボタンはポインターカーソル */
+      transition: background-color 0.2s;
+
+      &:hover {
+        background-color: #e0e0e0;
+      }
+
+      .material-icons {
+        font-size: 24px;
+        color: #757575;
+      }
+    }
+
+    .copy-feedback {
+      position: absolute;
+      top: 50%;
+      right: 120%; /* ボタンの左側に表示 */
+      padding: 5px 10px;
+      font-size: 0.8em;
+      color: #fff;
+      background-color: #2c3e50;
+      border-radius: 4px;
+      white-space: nowrap;
+      pointer-events: none; /* メッセージがクリックを妨げないように */
+      opacity: 0;
+      transform: translateY(-50%);
+      transition: opacity 0.3s;
+    }
+  }
 }
 
-.copy-btn:hover {
-  background-color: #e0e0e0;
-}
-
-.copy-btn .material-icons {
-  font-size: 24px;
-  color: #757575;
-}
-
-.copy-feedback {
-  position: absolute;
-  top: 50%;
-  right: 120%; /* ボタンの左側に表示 */
-  transform: translateY(-50%);
-  background-color: #2c3e50;
-  color: #fff;
-  padding: 5px 10px;
-  border-radius: 4px;
-  font-size: 0.8em;
-  opacity: 0;
-  transition: opacity 0.3s;
-  pointer-events: none; /* メッセージがクリックを妨げないように */
-  white-space: nowrap;
-}
-
-
-/* 戻るリンク */
+/*
+ * ----------------------------------------------------------------
+ * 戻るリンク
+ * ----------------------------------------------------------------
+ */
 .back-link {
   display: block;
   width: fit-content;
   margin: 30px auto 0;
   padding: 10px 20px;
-  background-color: #3498db;
   color: #fff;
-  text-decoration: none;
+  background-color: #3498db;
   border-radius: 5px;
+  text-decoration: none;
   transition: background-color 0.2s;
+
+  &:hover {
+    background-color: #2980b9;
+  }
 }
 
-.back-link:hover {
-  background-color: #2980b9;
-}
-
-
-/* スマートフォン表示時のCSS */
-@media (max-width: 600px) {
+/*
+ * ----------------------------------------------------------------
+ * レスポンシブ対応 (スマートフォン)
+ * ----------------------------------------------------------------
+ */
+@media (max-width: 768px) {
   .bands-container {
     padding: 15px;
   }
@@ -169,19 +192,4 @@ h2 {
     align-self: flex-end; /* 右寄せにする */
     margin-left: 0;
   }
-}
-
-/* バンドカードのカーソルをポインターに変更 */
-.band-card {
-  cursor: pointer;
-}
-
-/* アクションエリアはデフォルトのカーソルに戻す */
-.band-actions {
-  cursor: default;
-}
-
-/* コピーボタンは再度ポインターに設定 */
-.copy-btn {
-  cursor: pointer;
 }

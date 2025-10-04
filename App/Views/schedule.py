@@ -9,10 +9,12 @@ from ..db.schedule import ScheduleDatabaseManager
 from ..db.user import UserDatabaseManager
 
 
-# 日付の範囲を生成するためのヘルパー関数
+
 def daterange(start_date, end_date):
+  """指定された開始日から終了日までの日付を1日ずつ生成する。"""
   for n in range(int((end_date - start_date).days) + 1):
     yield start_date + timedelta(n)
+
 
 @app.route("/schedule-manage")
 @login_required
@@ -24,13 +26,13 @@ def schedule_manage():
   user = user_db_manager.get_user(email=current_user.id)
   if not user:
     flash("ユーザー情報が見つかりません。", "error")
-    return redirect(url_for('top'))
+    return redirect(url_for("top"))
 
   user_bands = band_db_manager.get_bands(user.id)
 
   # クエリパラメータから表示対象のband_idを取得（指定がなければデフォルト=0）
   try:
-    selected_band_id = int(request.args.get('band_id', 0))
+    selected_band_id = int(request.args.get("band_id", 0))
   except (ValueError, TypeError):
     selected_band_id = 0
 
@@ -41,9 +43,9 @@ def schedule_manage():
   # 表示するスケジュールを決定
   current_schedule = schedules_by_band.get(selected_band_id, {})
 
+  # 表示範囲の初期化
   dates_to_display = []
   times_to_display = range(24)
-  selected_band = None
 
   if selected_band_id == 0:  # デフォルトスケジュール表示
     if not user_bands:
@@ -54,30 +56,36 @@ def schedule_manage():
       # 全所属バンドの期間をカバーする日付範囲を計算
       start_date = min(band.start_date for band in user_bands)
       end_date = max(band.end_date for band in user_bands)
-
     dates_to_display = list(daterange(start_date, end_date))
-  else:  # 特定のバンドのスケジュール表示
-    # 選択されたバンドの情報を取得
-    selected_band = next((band for band in user_bands if band.id == selected_band_id), None)
 
+  else:  # 特定のバンドのスケジュール表示
+    selected_band = next(
+      (band for band in user_bands if band.id == selected_band_id), None
+    )
     if not selected_band:
       # ユーザーが所属していないバンドIDが指定された場合はアクセスを拒否
       abort(403, "このバンドへのアクセス権がありません。")
 
     # バンドの期間と時間に合わせて表示範囲を制限
-    dates_to_display = list(daterange(selected_band.start_date, selected_band.end_date))
-    times_to_display = range(selected_band.start_time.hour, selected_band.end_time.hour)
+    dates_to_display = list(
+      daterange(selected_band.start_date, selected_band.end_date)
+    )
+    times_to_display = range(
+      selected_band.start_time.hour, selected_band.end_time.hour
+    )
 
   # テンプレートで扱いやすいように、スケジュール辞書のキーをISO形式の文字列に変換
-  current_schedule_str_keys = {d.isoformat(): v for d, v in current_schedule.items()}
+  current_schedule_str_keys = {
+    d.isoformat(): v for d, v in current_schedule.items()
+  }
 
   return render_template(
     "schedule/manage.html",
     bands=user_bands,
     selected_band_id=selected_band_id,
     dates=dates_to_display,
-    times=list(times_to_display), # rangeオブジェクトをリストに変換
-    schedule_data=current_schedule_str_keys
+    times=list(times_to_display),  # rangeオブジェクトをリストに変換
+    schedule_data=current_schedule_str_keys,
   )
 
 
@@ -93,21 +101,22 @@ def save_schedule():
     return jsonify({"status": "error", "message": "User not found"}), 404
 
   data = request.get_json()
-  if not data or 'schedule' not in data or 'band_id' not in data:
+  if not data or "schedule" not in data or "band_id" not in data:
     return jsonify({"status": "error", "message": "Invalid data"}), 400
 
-  band_id = data['band_id']
-  schedule_str_keys = data['schedule']
+  band_id = data["band_id"]
+  schedule_str_keys = data["schedule"]
 
   # キーをdateオブジェクトに変換し、チェックが入っている日付のみを保存対象とする
   schedule_to_save = {}
   for date_str, time_list in schedule_str_keys.items():
-    if any(time_list):  # リストに1が1つでも含まれていれば保存
+    if any(time_list):  # リストにtrue相当の値が1つでも含まれていれば保存
       try:
         schedule_date = date.fromisoformat(date_str)
         schedule_to_save[schedule_date] = time_list
       except ValueError:
-        continue # 不正な日付フォーマットはスキップ
+        # 不正な日付フォーマットはスキップ
+        continue
 
   schedule_db_manager.update_schedule(user.id, schedule_to_save, band_id)
   return jsonify({"status": "success", "message": "Schedule updated."})
@@ -130,7 +139,9 @@ def get_default_schedule():
 
   if default_schedule_obj and default_schedule_obj.schedule:
     # JSONで返せるようにキーを文字列に変換
-    default_schedule_str_keys = {d.isoformat(): v for d, v in default_schedule_obj.schedule.items()}
+    default_schedule_str_keys = {
+      d.isoformat(): v for d, v in default_schedule_obj.schedule.items()
+    }
     return jsonify(default_schedule_str_keys)
   else:
     return jsonify({})

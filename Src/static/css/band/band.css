@@ -1,3 +1,8 @@
+/*
+ * ----------------------------------------------------------------
+ * バンドコンテナ全体
+ * ----------------------------------------------------------------
+ */
 .band-container {
   max-width: 1200px;
   margin: 0 auto;
@@ -7,180 +12,196 @@
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
+/*
+ * ----------------------------------------------------------------
+ * ヘッダー
+ * ----------------------------------------------------------------
+ */
 .band-header {
-  text-align: center;
-  margin-bottom: 15px;
-  border-bottom: 1px solid #eee;
   padding-bottom: 15px;
-}
+  margin-bottom: 15px;
+  text-align: center;
+  border-bottom: 1px solid #eee;
 
-h1 {
-  margin-bottom: 10px;
-  color: #2c3e50;
-}
+  h1 {
+    margin-bottom: 10px;
+    color: #2c3e50;
+  }
 
-.band-details {
-  color: #555;
-}
-.band-details .label {
-  font-weight: bold;
+  .band-details {
+    color: #555;
+
+    .label {
+      font-weight: bold;
+    }
+  }
 }
 
 .description {
-  text-align: center;
-  color: #7f8c8d;
   margin-bottom: 30px;
+  color: #7f8c8d;
+  text-align: center;
 }
 
-/* テーブルエリア */
+/*
+ * ----------------------------------------------------------------
+ * スケジュールテーブル
+ * ----------------------------------------------------------------
+ */
 .table-wrapper {
-  overflow-x: auto;
   margin-bottom: 30px;
+  overflow-x: auto;
 }
 
 .schedule-table {
   width: 100%;
-  border-collapse: collapse;
   min-width: 800px;
+  border-collapse: collapse;
+
+  th,
+  td {
+    height: 35px;
+    padding: 5px;
+    text-align: center;
+    vertical-align: middle;
+    border: 1px solid #ddd;
+  }
+
+  th {
+    font-weight: bold;
+    background-color: #f2f2f2;
+    white-space: nowrap;
+  }
+
+  .time-label {
+    font-weight: bold;
+    background-color: #f8f8f8;
+    white-space: nowrap;
+  }
+
+  /* --- セルの色分け --- */
+  td {
+    font-weight: 500;
+    color: #333;
+    background-color: #f9f9f9; /* デフォルトの背景色 */
+    transition: background-color 0.2s;
+
+    &[data-count="0"] {
+      background-color: #fdfdfd;
+    }
+    &[data-count="1"] { background-color: #c8e6c9; }
+    &[data-count="2"] { background-color: #a5d6a7; }
+    &[data-count="3"] { background-color: #81c784; }
+    &[data-count="4"] { background-color: #66bb6a; }
+    &[data-count="5"] { background-color: #4caf50; }
+
+    /* 5人以上は同じ色にする */
+    &:not([data-count="0"]):not([data-count="1"]):not([data-count="2"]):not([data-count="3"]):not([data-count="4"]) {
+      color: white;
+      background-color: #4caf50;
+    }
+  }
 }
 
-.schedule-table th,
-.schedule-table td {
-  border: 1px solid #ddd;
-  padding: 5px;
-  text-align: center;
-  vertical-align: middle;
-  height: 35px;
+/*
+ * ----------------------------------------------------------------
+ * ツールチップ
+ * ----------------------------------------------------------------
+ */
+.schedule-tooltip {
+  position: absolute;
+  z-index: 1000;
+  padding: 8px 12px;
+  font-size: 0.9em;
+  color: #fff;
+  background-color: rgba(44, 62, 80, 0.9);
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  pointer-events: none; /* マウスイベントを邪魔しないようにする */
+
+  /* 初期状態は非表示 */
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s, visibility 0.2s;
+
+  &.is-visible {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  li {
+    white-space: nowrap;
+  }
 }
 
-.schedule-table th {
-  background-color: #f2f2f2;
-  font-weight: bold;
-  white-space: nowrap;
-}
-
-.schedule-table .time-label {
-  font-weight: bold;
-  white-space: nowrap;
-  background-color: #f8f8f8;
-}
-
-/* セルの色分け */
-.schedule-table td {
-  background-color: #f9f9f9; /* デフォルトの背景色 */
-  color: #333;
-  font-weight: 500;
-  transition: background-color 0.2s;
-}
-
-.schedule-table td[data-count="0"] {
-  background-color: #fdfdfd;
-}
-
-.schedule-table td[data-count="1"] { background-color: #c8e6c9; } /* Light Green */
-.schedule-table td[data-count="2"] { background-color: #a5d6a7; }
-.schedule-table td[data-count="3"] { background-color: #81c784; }
-.schedule-table td[data-count="4"] { background-color: #66bb6a; }
-.schedule-table td[data-count="5"] { background-color: #4caf50; } /* Green */
-/* 5人以上は同じ色にする場合 */
-.schedule-table td:not([data-count="0"]):not([data-count="1"]):not([data-count="2"]):not([data-count="3"]):not([data-count="4"]) {
-  background-color: #4caf50;
-  color: white;
-}
-
-
+/*
+ * ----------------------------------------------------------------
+ * フッター
+ * ----------------------------------------------------------------
+ */
 .back-link {
   display: block;
   width: fit-content;
   margin: 20px auto 0;
   padding: 10px 20px;
-  background-color: #3498db;
   color: #fff;
-  text-decoration: none;
+  background-color: #3498db;
   border-radius: 5px;
+  text-decoration: none;
   transition: background-color 0.2s;
+
+  &:hover {
+    background-color: #2980b9;
+  }
 }
 
-.back-link:hover {
-  background-color: #2980b9;
+.band-footer-actions {
+  display: flex;
+  justify-content: flex-end; /* ボタンを右寄せにする */
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+
+  .btn-action {
+    padding: 10px 20px;
+    font-size: 0.95rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+
+  /* 退出ボタン */
+  .btn-leave {
+    color: #fff;
+    background-color: #f39c12;
+  }
+
+  /* 削除ボタン（危険な操作） */
+  .btn-delete {
+    color: #fff;
+    background-color: #e74c3c;
+  }
 }
 
-
-/* スマートフォン表示時のCSS */
+/*
+ * ----------------------------------------------------------------
+ * レスポンシブ対応 (スマートフォン)
+ * ----------------------------------------------------------------
+ */
 @media (max-width: 768px) {
   .band-container {
     padding: 15px;
   }
-}
-
-/* =================================== */
-/* ツールチップ
-/* =================================== */
-.schedule-tooltip {
-  position: absolute;
-  background-color: rgba(44, 62, 80, 0.9); /* #2c3e50 の半透明 */
-  color: #fff;
-  padding: 8px 12px;
-  border-radius: 6px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  font-size: 0.9em;
-  z-index: 1000;
-  pointer-events: none; /* ツールチップ自身がマウスイベントを邪魔しないように */
-  
-  /* 初期状態は非表示 */
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.2s, visibility 0.2s;
-}
-
-.schedule-tooltip.is-visible {
-  opacity: 1;
-  visibility: visible;
-}
-
-.schedule-tooltip ul {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.schedule-tooltip li {
-  white-space: nowrap;
-}
-
-/* =================================== */
-/* フッターアクションボタン
-/* =================================== */
-.band-footer-actions {
-  margin-top: 40px;
-  padding-top: 20px;
-  border-top: 1px solid #eee;
-  display: flex;
-  justify-content: flex-end; /* ボタンを右寄せにする */
-}
-
-.btn-action {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  font-size: 0.95rem;
-  font-weight: bold;
-  cursor: pointer;
-  transition: opacity 0.2s;
-}
-
-.btn-action:hover {
-  opacity: 0.8;
-}
-
-/* 退出ボタンのスタイル */
-.btn-leave {
-  background-color: #f39c12; /* オレンジ系 */
-  color: #fff;
-}
-
-/* 削除ボタンのスタイル (危険な操作なので赤色に) */
-.btn-delete {
-  background-color: #e74c3c; /* 赤系 */
-  color: #fff;
 }

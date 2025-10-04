@@ -8,6 +8,7 @@
   <title>ユーザー登録</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/resist.css') }}">
+  <link rel="icon" href="{{ url_for('static', filename='icons/favicon.ico') }}">
 </head>
 
 <body>
@@ -15,7 +16,6 @@
     <div class="header-container">
       <a href="#" class="site-logo" style="pointer-events: none;"> <!-- 登録中は他のページに遷移させない -->
         <img src="{{ url_for('static', filename='icons/favicon.png') }}" alt="ロゴ" class="logo-image">
-        <span>Jappy</span>
       </a>
     </div>
   </header>
