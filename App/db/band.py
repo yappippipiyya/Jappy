@@ -1,11 +1,24 @@
 import pymysql
-from datetime import date, time
+from datetime import date, time, timedelta
 import secrets
 import string
 
 from .base import _get_connection
 from .user import User
 
+def _timedelta_to_time(td: timedelta) -> time:
+    """
+    pymysqlが返すtimedeltaオブジェクトをtimeオブジェクトに変換するヘルパー関数
+    """
+    if not isinstance(td, timedelta):
+        return td  # 既にtimeオブジェクトなどの場合はそのまま返す
+    total_seconds = int(td.total_seconds())
+    # 24時間を超える時間表現はMySQLのTIME型ではあり得るが、ここでは24時間で丸める
+    total_seconds %= 86400  # 24 * 60 * 60
+    hour = total_seconds // 3600
+    minute = (total_seconds % 3600) // 60
+    second = total_seconds % 60
+    return time(hour, minute, second)
 
 
 class Band:
@@ -103,7 +116,12 @@ class BandDatabaseManager:
         with conn.cursor() as cur:
           cur.execute(sql, (args,))
           result = cur.fetchone()
-          return Band(**result) if result else None
+          if result:
+            # timedeltaをtimeに変換
+            result['start_time'] = _timedelta_to_time(result['start_time'])
+            result['end_time'] = _timedelta_to_time(result['end_time'])
+            return Band(**result)
+          return None
     except pymysql.Error as e:
       print(f"データベースエラーが発生しました: {e}")
       return None
@@ -125,6 +143,9 @@ class BandDatabaseManager:
           cur.execute(sql, (user_id,))
           results = cur.fetchall()
           for row in results:
+            # timedeltaをtimeに変換
+            row['start_time'] = _timedelta_to_time(row['start_time'])
+            row['end_time'] = _timedelta_to_time(row['end_time'])
             bands_list.append(Band(**row))
     except pymysql.Error as e:
       print(f"データベースエラーが発生しました: {e}")
@@ -148,7 +169,6 @@ class BandDatabaseManager:
           cur.execute(sql, (band_id,))
           results = cur.fetchall()
           for row in results:
-            # Userクラスのインスタンスを作成してリストに追加
             users_list.append(User(**row))
     except pymysql.Error as e:
       print(f"データベースエラーが発生しました: {e}")
