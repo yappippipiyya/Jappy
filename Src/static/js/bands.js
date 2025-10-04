@@ -1,4 +1,21 @@
 document.addEventListener('DOMContentLoaded', () => {
+  // --- 1. バンドカードクリックによるページ遷移処理 ---
+  const bandCards = document.querySelectorAll('.band-card');
+
+  bandCards.forEach(card => {
+    card.addEventListener('click', (event) => {
+      // クリックされたのがコピーボタン等のアクションエリアでなければ遷移
+      if (!event.target.closest('.band-actions')) {
+        const token = card.dataset.token;
+        if (token) {
+          window.location.href = `/band?token=${token}`;
+        }
+      }
+    });
+  });
+
+
+  // --- 2. 既存のコピーボタンの処理 ---
   const copyButtons = document.querySelectorAll('.copy-btn');
 
   copyButtons.forEach(button => {

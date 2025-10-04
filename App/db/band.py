@@ -11,10 +11,9 @@ def _timedelta_to_time(td: timedelta) -> time:
     pymysqlが返すtimedeltaオブジェクトをtimeオブジェクトに変換するヘルパー関数
     """
     if not isinstance(td, timedelta):
-        return td  # 既にtimeオブジェクトなどの場合はそのまま返す
+        return td
     total_seconds = int(td.total_seconds())
-    # 24時間を超える時間表現はMySQLのTIME型ではあり得るが、ここでは24時間で丸める
-    total_seconds %= 86400  # 24 * 60 * 60
+    total_seconds %= 86400
     hour = total_seconds // 3600
     minute = (total_seconds % 3600) // 60
     second = total_seconds % 60
@@ -23,9 +22,10 @@ def _timedelta_to_time(td: timedelta) -> time:
 
 class Band:
   """ バンド情報を格納するためのデータクラス """
-  def __init__(self, id: int, name: str, token: str, start_date: date, end_date: date, start_time: time, end_time: time):
+  def __init__(self, id: int, name: str, creator_user_id: int, token: str, start_date: date, end_date: date, start_time: time, end_time: time):
     self.id = id
     self.name = name
+    self.creator_user_id = creator_user_id
     self.token = token
     self.start_date = start_date
     self.end_date = end_date
@@ -33,7 +33,7 @@ class Band:
     self.end_time = end_time
 
   def __repr__(self):
-    return (f"Band(id={self.id}, name='{self.name}', token='{self.token}', "
+    return (f"Band(id={self.id}, name='{self.name}', creator_user_id='{self.creator_user_id}, token='{self.token}', "
             f"start_date='{self.start_date}', end_date='{self.end_date}', "
             f"start_time='{self.start_time}', end_time='{self.end_time}')")
 
@@ -56,18 +56,17 @@ class BandDatabaseManager:
     """
     token = self._generate_token()
     sql = (
-      "INSERT INTO bands (name, token, start_date, end_date, start_time, end_time) "
-      "VALUES (%s, %s, %s, %s, %s, %s);"
+      "INSERT INTO bands (name, creator_user_id, token, start_date, end_date, start_time, end_time) "
+      "VALUES (%s, %s, %s, %s, %s, %s, %s);"
     )
     try:
       with self._get_connection() as conn:
         with conn.cursor() as cur:
-          cur.execute(sql, (name, token, start_date, end_date, start_time, end_time))
+          cur.execute(sql, (name, creator_user_id, token, start_date, end_date, start_time, end_time))
           new_band_id = cur.lastrowid
           if not new_band_id:
             raise pymysql.Error("バンドの作成に失敗しました。")
 
-          # band_userテーブルに作成者を追加
           member_sql = "INSERT INTO band_user (user_id, band_id) VALUES (%s, %s);"
           cur.execute(member_sql, (creator_user_id, new_band_id))
 
@@ -97,15 +96,73 @@ class BandDatabaseManager:
       print(f"データベースエラーが発生しました: {e}")
       return False
 
+  # =================================================================
+  # ここからが追加されたメソッド
+  # =================================================================
+
+  def remove_member(self, user_id: int, band_id: int) -> bool:
+    """
+    バンドから指定されたユーザーを退出させる (メンバーシップを削除)
+    """
+    sql = "DELETE FROM band_user WHERE user_id = %s AND band_id = %s;"
+    try:
+      with self._get_connection() as conn:
+        with conn.cursor() as cur:
+          # メンバーシップレコードを削除
+          rows_affected = cur.execute(sql, (user_id, band_id))
+          
+          # band_idに関連する個人のスケジュールも削除
+          # 注意: band_id=0 (デフォルト) は削除しないようにする
+          if band_id != 0:
+            schedule_sql = "DELETE FROM schedules WHERE user_id = %s AND band_id = %s;"
+            cur.execute(schedule_sql, (user_id, band_id))
+
+          conn.commit()
+          # 1行以上削除されていれば成功
+          return rows_affected > 0
+
+    except pymysql.Error as e:
+      print(f"データベースエラーが発生しました (remove_member): {e}")
+      return False
+
+
+  def delete_band(self, band_id: int) -> bool:
+    """
+    バンド自体を削除する。関連する全てのデータ (メンバーシップ、スケジュール) も削除される。
+    """
+    # 削除する順番が重要 (外部キー制約のため)
+    # 1. schedules -> 2. band_user -> 3. bands
+    sqls = [
+      "DELETE FROM schedules WHERE band_id = %s;",
+      "DELETE FROM band_user WHERE band_id = %s;",
+      "DELETE FROM bands WHERE id = %s;"
+    ]
+    try:
+      with self._get_connection() as conn:
+        with conn.cursor() as cur:
+          for sql in sqls:
+            cur.execute(sql, (band_id,))
+          
+          conn.commit()
+          return True
+
+    except pymysql.Error as e:
+      print(f"データベースエラーが発生しました (delete_band): {e}")
+      # トランザクションは `with` ブロックにより自動的にロールバックされる
+      return False
+
+  # =================================================================
+  # ここからは既存のメソッド
+  # =================================================================
 
   def get_band(self, band_id: int | None = None, token: str | None = None) -> Band | None:
     """ id, tokenを指定して単一のバンド情報を取得する """
     if band_id:
-      sql = "SELECT id, name, token, start_date, end_date, start_time, end_time FROM bands WHERE id = %s;"
+      sql = "SELECT id, name, creator_user_id, token, start_date, end_date, start_time, end_time FROM bands WHERE id = %s;"
       args = band_id
 
     elif token:
-      sql = "SELECT id, name, token, start_date, end_date, start_time, end_time FROM bands WHERE token = %s;"
+      sql = "SELECT id, name, creator_user_id, token, start_date, end_date, start_time, end_time FROM bands WHERE token = %s;"
       args = token
 
     else:
@@ -117,7 +174,6 @@ class BandDatabaseManager:
           cur.execute(sql, (args,))
           result = cur.fetchone()
           if result:
-            # timedeltaをtimeに変換
             result['start_time'] = _timedelta_to_time(result['start_time'])
             result['end_time'] = _timedelta_to_time(result['end_time'])
             return Band(**result)
@@ -143,7 +199,6 @@ class BandDatabaseManager:
           cur.execute(sql, (user_id,))
           results = cur.fetchall()
           for row in results:
-            # timedeltaをtimeに変換
             row['start_time'] = _timedelta_to_time(row['start_time'])
             row['end_time'] = _timedelta_to_time(row['end_time'])
             bands_list.append(Band(**row))

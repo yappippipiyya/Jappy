@@ -38,14 +38,15 @@
     <div class="band-list">
       {% if bands %}
         {% for band in bands %}
-          <div class="band-card">
+          {# ★ data-token 属性を追加 #}
+          <div class="band-card" data-token="{{ band.token }}">
             <div class="band-info">
               <h3 class="band-name">{{ band.name }}</h3>
               <p class="band-period">
                 <span class="label">期間:</span> {{ band.start_date.strftime('%Y/%m/%d') }} - {{ band.end_date.strftime('%Y/%m/%d') }}
               </p>
               <p class="band-time">
-                <span class="label">時間:</span> {{ band.start_time }} - {{ band.end_time }}
+                <span class="label">時間:</span> {{ band.start_time.strftime('%H:%M') }} - {{ band.end_time.strftime('%H:%M') }}
               </p>
               <p class="members">
                 <span class="label">メンバー:</span> {{ users_dict[band.id] }}
@@ -53,7 +54,6 @@
             </div>
             <div class="band-actions">
               <div class="url-copy-wrapper">
-                <!-- このinputタグはCSSで非表示にします -->
                 <input type="text" value="{{ request.url_root }}join?token={{ band.token }}" readonly>
                 <button class="copy-btn" title="招待URLをコピー">
                   <span class="material-icons">content_copy</span>

@@ -170,3 +170,18 @@ h2 {
     margin-left: 0;
   }
 }
+
+/* バンドカードのカーソルをポインターに変更 */
+.band-card {
+  cursor: pointer;
+}
+
+/* アクションエリアはデフォルトのカーソルに戻す */
+.band-actions {
+  cursor: default;
+}
+
+/* コピーボタンは再度ポインターに設定 */
+.copy-btn {
+  cursor: pointer;
+}
