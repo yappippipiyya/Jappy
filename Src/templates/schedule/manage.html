@@ -63,13 +63,15 @@
             </td>
             {% for day in dates %}
             <td class="schedule-cell"> <!-- チェックボックスを含むセル -->
-              <input type="checkbox"
-                     class="schedule-checkbox"
-                     data-date="{{ day.isoformat() }}"
-                     data-hour="{{ hour }}"
-                     {% if schedule_data.get(day.isoformat()) and schedule_data[day.isoformat()][hour] == 1 %}
-                     checked
-                     {% endif %}>
+              <input
+                type="checkbox"
+                class="schedule-checkbox"
+                data-date="{{ day.isoformat() }}"
+                data-hour="{{ hour }}"
+                {% if schedule_data.get(day.isoformat()) and schedule_data[day.isoformat()][hour] == 1 %}
+                checked
+                {% endif %}
+              >
             </td>
             {% endfor %}
           </tr>

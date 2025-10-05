@@ -204,4 +204,40 @@
   .band-container {
     padding: 15px;
   }
+
+  .table-wrapper .schedule-table {
+    min-width: unset;
+  }
+
+  .schedule-table th,
+  .schedule-table td {
+    height: 30px;
+    padding: 4px 2px;
+  }
+
+  /* --- ここを修正/追加 --- */
+  .schedule-table .time-label { /* 時間ラベルのセルに特化 */
+    padding: 4px 6px; /* 左右のパディングを増やして余白を確保 */
+    text-align: left; /* 文字を左寄せにして読みやすくする */
+  }
+  /* --- 修正/追加ここまで --- */
+
+  .schedule-table th {
+    font-size: 0.85em;
+  }
+
+  .schedule-table .time-label {
+    /* 上の .time-label にてpaddingを変更したので、ここで font-sizeのみ指定 */
+    font-size: 0.9em;
+  }
+
+  .band-footer-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .band-footer-actions .btn-action {
+    width: 100%;
+  }
 }

@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
       console.error('Error saving schedule:', error);
       saveStatus.textContent = 'エラーが発生しました';
     }
-  }, 5000);
+  }, 3000);
 
   // 現在のチェックボックスの状態からスケジュールデータを収集する関数
   function collectScheduleData() {
@@ -88,13 +88,11 @@ document.addEventListener('DOMContentLoaded', () => {
           // デフォルトスケジュールに該当データがあり、それが1(可能)ならチェック
           const shouldBeChecked = defaultSchedule[date] && defaultSchedule[date][hour] === 1;
           if (checkbox.checked !== shouldBeChecked) {
-             checkbox.checked = shouldBeChecked;
-             isDirty = true; // 変更があったのでフラグを立てる
-             saveStatus.textContent = '変更あり';
+            checkbox.checked = shouldBeChecked;
+            isDirty = true; // 変更があったのでフラグを立てる
+            saveStatus.textContent = '変更あり';
           }
         });
-
-        alert('デフォルトのスケジュールを適用しました。変更は数秒後に自動保存されます。');
 
       } catch (error) {
         console.error('Error applying default schedule:', error);

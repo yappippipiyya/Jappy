@@ -139,8 +139,6 @@
   background-color: rgba(52, 152, 219, 0.1); /* 薄い青色の背景 */
   transition: background-color 0.1s ease-out; /* ハイライト解除時のスムーズな変化 */
 }
-
-
 /*
  * ----------------------------------------------------------------
  * レスポンシブ対応 (スマートフォン)
@@ -170,12 +168,50 @@
         justify-content: space-between;
         align-items: center;
         width: 100%;
+
+        /* ここを修正/追加 */
+        button { /* 「デフォルトを適用」ボタンに特化 */
+          width: auto; /* ボタンの内容に合わせて幅を調整 */
+          white-space: nowrap; /* テキストが改行されないように */
+          flex-shrink: 0; /* スペースが足りない時にボタンが縮みすぎないように */
+        }
+        /* 追加: 保存ステータスのテキストも改行させない */
+        #save-status {
+          white-space: nowrap;
+        }
+        /* 修正/追加ここまで */
       }
 
-      select,
-      button {
+      select {
         width: 100%;
       }
     }
+  }
+
+  .table-wrapper .schedule-table {
+    min-width: unset;
+  }
+
+  .schedule-table th,
+  .schedule-table td {
+    padding: 6px 3px;
+  }
+
+  .schedule-table td.time-label {
+    padding: 6px 8px;
+    text-align: left;
+  }
+
+  .schedule-table th.date-header {
+    font-size: 0.85em;
+  }
+
+  .schedule-table .time-label {
+    font-size: 0.9em;
+  }
+
+  .schedule-table .schedule-checkbox {
+    width: 18px;
+    height: 18px;
   }
 }
