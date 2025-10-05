@@ -23,7 +23,7 @@ def schedule_manage():
   band_db_manager = BandDatabaseManager()
   schedule_db_manager = ScheduleDatabaseManager()
 
-  user = user_db_manager.get_user(email=current_user.id)
+  user = user_db_manager.get_user(line_user_id=current_user.id)
   if not user:
     flash("ユーザー情報が見つかりません。", "error")
     return redirect(url_for("top"))
@@ -96,7 +96,7 @@ def save_schedule():
   user_db_manager = UserDatabaseManager()
   schedule_db_manager = ScheduleDatabaseManager()
 
-  user = user_db_manager.get_user(email=current_user.id)
+  user = user_db_manager.get_user(line_user_id=current_user.id)
   if not user:
     return jsonify({"status": "error", "message": "User not found"}), 404
 
@@ -129,7 +129,7 @@ def get_default_schedule():
   user_db_manager = UserDatabaseManager()
   schedule_db_manager = ScheduleDatabaseManager()
 
-  user = user_db_manager.get_user(email=current_user.id)
+  user = user_db_manager.get_user(line_user_id=current_user.id)
   if not user:
     return jsonify({"status": "error", "message": "User not found"}), 404
 

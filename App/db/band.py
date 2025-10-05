@@ -212,7 +212,7 @@ class BandDatabaseManager:
   def get_users(self, band_id: int) -> list[User]:
     """指定されたバンドIDに所属する全てのユーザー情報をリストで取得する"""
     sql = """
-      SELECT u.id, u.email, u.name
+      SELECT u.id, u.line_user_id, u.name
       FROM users u
       JOIN band_user bu ON u.id = bu.user_id
       WHERE bu.band_id = %s;
