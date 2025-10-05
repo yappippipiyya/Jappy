@@ -13,16 +13,8 @@
 </head>
 
 <body>
-  <header class="site-header">
-    <div class="header-container">
-      <a href="#" class="site-logo" style="pointer-events: none;"> <!-- 登録中は他のページに遷移させない -->
-        <img src="{{ url_for('static', filename='icons/favicon.png') }}" alt="ロゴ" class="logo-image">
-      </a>
-    </div>
-  </header>
-
-  <!-- 警告メッセージの表示 -->
-  <div>
+  <!-- 警告メッセージの表示 - bodyの直下で、他のコンテンツから独立して配置 -->
+  <div class="flash-message-container">
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
         <div>
@@ -34,13 +26,18 @@
     {% endwith %}
   </div>
 
-  <!-- Googleでログインボタン -->
-  <div class="container">
-    <div class="login-box">
-      <button id="login-btn" class="btn btn-lg">
-        <img src="{{ url_for('static', filename='icons/line-icon32.png') }}" alt="">
-        <span>LINEでログイン</span>
-      </button>
+  <!-- ロゴとログインボタンをまとめるラッパー -->
+  <div class="main-content-wrapper">
+    <img src="{{ url_for('static', filename='icons/jappy.png') }}" alt="ロゴ" class="logo-image">
+
+    <!-- LINEでログインボタン -->
+    <div class="container">
+      <div class="login-box">
+        <button id="login-btn" class="btn btn-lg">
+          <img src="{{ url_for('static', filename='icons/line-icon32.png') }}" alt="">
+          <span>LINEでログイン</span>
+        </button>
+      </div>
     </div>
   </div>
 

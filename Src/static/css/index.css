@@ -3,18 +3,74 @@
  * Flashメッセージ
  * ----------------------------------------------------------------
  */
+.flash-message-container {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  box-sizing: border-box;
+  z-index: 100;
+}
+
 .flash-message {
   padding: 1rem;
-  margin: 1rem 0;
+  margin: 1rem; /* 左右にもマージンを適用 */
   border: 1px solid transparent;
   border-radius: 0.25rem;
+}
 
-  &.warning {
-    color: #856404;
-    background-color: #fff3cd;
-    border-color: #ffeeba;
+.flash-message.warning {
+  color: #856404;
+  background-color: #fff3cd;
+  border-color: #ffeeba;
+}
+
+
+/*
+ * ----------------------------------------------------------------
+ * 全体レイアウトの調整
+ * ----------------------------------------------------------------
+ */
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.main-content-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
+  margin-top: -5vh;
+  width: 100%;
+}
+
+/*
+ * ----------------------------------------------------------------
+ * ロゴのスタイル (レスポンシブ対応)
+ * ----------------------------------------------------------------
+ */
+.logo-image {
+  margin-bottom: 30px;
+  height: auto;
+  max-width: 250px;
+  width: 30%;
+}
+
+/* スマートフォン向けのスタイル */
+@media (max-width: 768px) {
+  .logo-image {
+    width: 60%;
+    max-width: none;
   }
 }
+
 
 /*
  * ----------------------------------------------------------------
@@ -25,7 +81,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  width: 100%; /* login-btnが中央に配置されるように */
 }
 
 #login-btn {
@@ -40,14 +96,10 @@
   border-radius: 50vh;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
   transition: background-color 0.3s, box-shadow 0.3s;
+}
 
-  &:hover {
-    background-color: #f8f8f8;
-    border-color: #cccccc;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-
-  .google-icon {
-    vertical-align: middle;
-  }
+#login-btn:hover {
+  background-color: #f8f8f8;
+  border-color: #cccccc;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
