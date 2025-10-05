@@ -121,7 +121,7 @@ def band():
           schedules_detail[date_str][hour].append(member_name)
 
   dates_to_display = list(daterange(band.start_date, band.end_date))
-  times_to_display = range(band.start_time.hour, band.end_time.hour)
+  times_to_display = range(band.start_time.hour, band.end_time.hour+1)
 
   user_db = UserDatabaseManager()
   creator = user_db.get_user(band.creator_user_id)

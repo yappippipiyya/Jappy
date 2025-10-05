@@ -71,7 +71,7 @@ def schedule_manage():
       daterange(selected_band.start_date, selected_band.end_date)
     )
     times_to_display = range(
-      selected_band.start_time.hour, selected_band.end_time.hour
+      selected_band.start_time.hour, selected_band.end_time.hour+1
     )
 
   # テンプレートで扱いやすいように、スケジュール辞書のキーをISO形式の文字列に変換
