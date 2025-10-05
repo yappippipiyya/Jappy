@@ -3,6 +3,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const saveStatus = document.getElementById('save-status');
   let isDirty = false; // スケジュールに変更があったかどうかのフラグ
 
+  // 新規追加: 日付ヘッダーと時間ラベルの要素を取得
+  const dateHeaders = document.querySelectorAll('.date-header');
+  const timeLabels = document.querySelectorAll('.time-label');
+  const allCheckboxes = document.querySelectorAll('.schedule-checkbox'); // 全てのチェックボックス
+
   // バンドセレクターが変更されたらページをリロード
   bandSelector.addEventListener('change', () => {
     const selectedBandId = bandSelector.value;
@@ -10,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // チェックボックスが変更されたら、変更フラグを立てる
-  document.querySelectorAll('.schedule-checkbox').forEach(checkbox => {
+  allCheckboxes.forEach(checkbox => {
     checkbox.addEventListener('change', () => {
       isDirty = true;
       saveStatus.textContent = '変更あり';
@@ -50,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // 現在のチェックボックスの状態からスケジュールデータを収集する関数
   function collectScheduleData() {
     const schedule = {};
-    document.querySelectorAll('.schedule-checkbox').forEach(checkbox => {
+    allCheckboxes.forEach(checkbox => {
       const date = checkbox.dataset.date;
       const hour = parseInt(checkbox.dataset.hour, 10);
 
@@ -61,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     return schedule;
   }
-  
+
   // 「デフォルトを適用」ボタンの処理
   const applyDefaultBtn = document.getElementById('apply-default-btn');
   if (applyDefaultBtn) {
@@ -73,10 +78,10 @@ document.addEventListener('DOMContentLoaded', () => {
       try {
         const response = await fetch('/schedule-manage/default-schedule');
         if (!response.ok) throw new Error('Failed to fetch default schedule');
-        
+
         const defaultSchedule = await response.json();
 
-        document.querySelectorAll('.schedule-checkbox').forEach(checkbox => {
+        allCheckboxes.forEach(checkbox => {
           const date = checkbox.dataset.date;
           const hour = parseInt(checkbox.dataset.hour, 10);
 
@@ -88,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
              saveStatus.textContent = '変更あり';
           }
         });
-        
+
         alert('デフォルトのスケジュールを適用しました。変更は数秒後に自動保存されます。');
 
       } catch (error) {
@@ -97,4 +102,84 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
+
+  // --- 新規追加: 縦軸・横軸タップでの一括チェック/解除機能 ---
+
+  // 列（日付）ヘッダーのクリックイベント
+  dateHeaders.forEach(header => {
+    header.addEventListener('click', (event) => {
+      const targetDate = header.dataset.date;
+      // 該当する列のチェックボックスをフィルタリング
+      const columnCheckboxes = Array.from(allCheckboxes).filter(cb => cb.dataset.date === targetDate);
+
+      // 現在の列のチェック状態を確認
+      const allChecked = columnCheckboxes.every(cb => cb.checked);
+      // 全てチェック済みなら解除、そうでなければ全てチェックする状態を決定
+      const targetCheckedState = !allChecked;
+
+      let changedCount = 0;
+      columnCheckboxes.forEach(cb => {
+        if (cb.checked !== targetCheckedState) {
+          cb.checked = targetCheckedState;
+          changedCount++;
+        }
+      });
+
+      if (changedCount > 0) {
+        isDirty = true;
+        saveStatus.textContent = '変更あり';
+      }
+
+      // 列をハイライトする処理
+      columnCheckboxes.forEach(cb => {
+        // チェックボックスの親セルにハイライトクラスを追加
+        cb.closest('.schedule-cell').classList.add('cell-highlight');
+      });
+      // 300ミリ秒後にハイライトを解除
+      setTimeout(() => {
+        columnCheckboxes.forEach(cb => {
+          cb.closest('.schedule-cell').classList.remove('cell-highlight');
+        });
+      }, 300);
+    });
+  });
+
+  // 行（時間）ラベルのクリックイベント
+  timeLabels.forEach(label => {
+    label.addEventListener('click', (event) => {
+      const targetHour = label.dataset.hour;
+      // 該当する行のチェックボックスをフィルタリング
+      const rowCheckboxes = Array.from(allCheckboxes).filter(cb => cb.dataset.hour === targetHour);
+
+      // 現在の行のチェック状態を確認
+      const allChecked = rowCheckboxes.every(cb => cb.checked);
+      // 全てチェック済みなら解除、そうでなければ全てチェックする状態を決定
+      const targetCheckedState = !allChecked;
+
+      let changedCount = 0;
+      rowCheckboxes.forEach(cb => {
+        if (cb.checked !== targetCheckedState) {
+          cb.checked = targetCheckedState;
+          changedCount++;
+        }
+      });
+
+      if (changedCount > 0) {
+        isDirty = true;
+        saveStatus.textContent = '変更あり';
+      }
+
+      // 行をハイライトする処理
+      rowCheckboxes.forEach(cb => {
+        // チェックボックスの親セルにハイライトクラスを追加
+        cb.closest('.schedule-cell').classList.add('cell-highlight');
+      });
+      // 300ミリ秒後にハイライトを解除
+      setTimeout(() => {
+        rowCheckboxes.forEach(cb => {
+          cb.closest('.schedule-cell').classList.remove('cell-highlight');
+        });
+      }, 300);
+    });
+  });
 });

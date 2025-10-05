@@ -45,10 +45,10 @@
       <table class="schedule-table">
         <thead>
           <tr>
-            <th>時間</th>
+            <th class="corner-cell">時間</th> <!-- 角のセル -->
             {% for day in dates %}
             {% set weekdays = ['月', '火', '水', '木', '金', '土', '日'] %}
-            <th>
+            <th class="date-header" data-date="{{ day.isoformat() }}">
               {{ day.strftime('%m/%d') }}<br>
               {{ weekdays[day.weekday()] }}
             </th>
@@ -58,9 +58,11 @@
         <tbody>
           {% for hour in times %}
           <tr>
-            <td class="time-label">{{ "%02d:00" | format(hour) }}</td>
+            <td class="time-label" data-hour="{{ hour }}">
+              {{ "%02d:00" | format(hour) }}
+            </td>
             {% for day in dates %}
-            <td>
+            <td class="schedule-cell"> <!-- チェックボックスを含むセル -->
               <input type="checkbox"
                      class="schedule-checkbox"
                      data-date="{{ day.isoformat() }}"

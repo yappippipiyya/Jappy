@@ -110,6 +110,39 @@
 
 /*
  * ----------------------------------------------------------------
+ * テーブルエリア - UI改善 (新規追加/更新)
+ * ----------------------------------------------------------------
+ */
+.schedule-table th.date-header,
+.schedule-table td.time-label {
+  cursor: pointer; /* マウスポインターを指カーソルに */
+  user-select: none; /* テキスト選択を禁止 */
+  transition: background-color 0.1s ease-in-out; /* ホバー/アクティブ時のスムーズな変化 */
+}
+
+.schedule-table th.date-header:hover,
+.schedule-table td.time-label:hover {
+  background-color: #e0e0e0; /* ホバー時の背景色 */
+}
+
+/* 角の「時間」セルはホバー対象外にすることも可能（任意） */
+.schedule-table th.corner-cell {
+  cursor: default;
+  background-color: #f2f2f2; /* headerと同じ */
+}
+.schedule-table th.corner-cell:hover {
+  background-color: #f2f2f2; /* ホバーしても色を変えない */
+}
+
+/* 一括チェック/解除時にセルをハイライトするクラス */
+.schedule-table .cell-highlight {
+  background-color: rgba(52, 152, 219, 0.1); /* 薄い青色の背景 */
+  transition: background-color 0.1s ease-out; /* ハイライト解除時のスムーズな変化 */
+}
+
+
+/*
+ * ----------------------------------------------------------------
  * レスポンシブ対応 (スマートフォン)
  * ----------------------------------------------------------------
  */
