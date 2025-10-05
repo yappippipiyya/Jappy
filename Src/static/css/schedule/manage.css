@@ -1,7 +1,5 @@
 /*
- * ----------------------------------------------------------------
- * コンテナ全体
- * ----------------------------------------------------------------
+ * スケジュールコンテナの基本スタイル
  */
 .schedule-container {
   max-width: 1200px;
@@ -19,9 +17,7 @@
 }
 
 /*
- * ----------------------------------------------------------------
- * 操作エリア
- * ----------------------------------------------------------------
+ * スケジュール操作エリアのスタイル
  */
 .controls {
   display: flex;
@@ -63,15 +59,16 @@
   }
 }
 
+/*
+ * 保存ステータス表示のスタイル
+ */
 #save-status {
   font-style: italic;
   color: #666;
 }
 
 /*
- * ----------------------------------------------------------------
- * テーブルエリア
- * ----------------------------------------------------------------
+ * スケジュールテーブルエリアのスタイル
  */
 .table-wrapper {
   overflow-x: auto; /* テーブルがはみ出す場合は横スクロール */
@@ -105,44 +102,39 @@
       height: 20px;
       cursor: pointer;
     }
+
+    /* テーブルヘッダと時間ラベルのUI改善（クリック可能にする） */
+    th.date-header,
+    td.time-label {
+      cursor: pointer; /* マウスポインターを指カーソルに */
+      user-select: none; /* テキスト選択を禁止 */
+      transition: background-color 0.1s ease-in-out; /* ホバー/アクティブ時のスムーズな変化 */
+
+      &:hover {
+        background-color: #e0e0e0; /* ホバー時の背景色 */
+      }
+    }
+
+    /* 角の「時間」セルはホバー対象外 */
+    th.corner-cell {
+      cursor: default;
+      background-color: #f2f2f2;
+
+      &:hover {
+        background-color: #f2f2f2; /* ホバーしても色を変えない */
+      }
+    }
+
+    /* 一括チェック/解除時にセルをハイライトするクラス */
+    .cell-highlight {
+      background-color: rgba(52, 152, 219, 0.1); /* 薄い青色の背景 */
+      transition: background-color 0.1s ease-out; /* ハイライト解除時のスムーズな変化 */
+    }
   }
 }
 
 /*
- * ----------------------------------------------------------------
- * テーブルエリア - UI改善 (新規追加/更新)
- * ----------------------------------------------------------------
- */
-.schedule-table th.date-header,
-.schedule-table td.time-label {
-  cursor: pointer; /* マウスポインターを指カーソルに */
-  user-select: none; /* テキスト選択を禁止 */
-  transition: background-color 0.1s ease-in-out; /* ホバー/アクティブ時のスムーズな変化 */
-}
-
-.schedule-table th.date-header:hover,
-.schedule-table td.time-label:hover {
-  background-color: #e0e0e0; /* ホバー時の背景色 */
-}
-
-/* 角の「時間」セルはホバー対象外にすることも可能（任意） */
-.schedule-table th.corner-cell {
-  cursor: default;
-  background-color: #f2f2f2; /* headerと同じ */
-}
-.schedule-table th.corner-cell:hover {
-  background-color: #f2f2f2; /* ホバーしても色を変えない */
-}
-
-/* 一括チェック/解除時にセルをハイライトするクラス */
-.schedule-table .cell-highlight {
-  background-color: rgba(52, 152, 219, 0.1); /* 薄い青色の背景 */
-  transition: background-color 0.1s ease-out; /* ハイライト解除時のスムーズな変化 */
-}
-/*
- * ----------------------------------------------------------------
- * レスポンシブ対応 (スマートフォン)
- * ----------------------------------------------------------------
+ * レスポンシブ対応 (スマートフォン向け)
  */
 @media (max-width: 768px) {
   .schedule-container {
@@ -169,17 +161,15 @@
         align-items: center;
         width: 100%;
 
-        /* ここを修正/追加 */
         button { /* 「デフォルトを適用」ボタンに特化 */
           width: auto; /* ボタンの内容に合わせて幅を調整 */
           white-space: nowrap; /* テキストが改行されないように */
           flex-shrink: 0; /* スペースが足りない時にボタンが縮みすぎないように */
         }
-        /* 追加: 保存ステータスのテキストも改行させない */
-        #save-status {
+
+        #save-status { /* 保存ステータスのテキストも改行させない */
           white-space: nowrap;
         }
-        /* 修正/追加ここまで */
       }
 
       select {
@@ -188,30 +178,32 @@
     }
   }
 
-  .table-wrapper .schedule-table {
-    min-width: unset;
-  }
+  .table-wrapper {
+    .schedule-table {
+      min-width: unset;
 
-  .schedule-table th,
-  .schedule-table td {
-    padding: 6px 3px;
-  }
+      th,
+      td {
+        padding: 6px 3px;
+      }
 
-  .schedule-table td.time-label {
-    padding: 6px 8px;
-    text-align: left;
-  }
+      td.time-label {
+        padding: 6px 8px;
+        text-align: left;
+      }
 
-  .schedule-table th.date-header {
-    font-size: 0.85em;
-  }
+      th.date-header {
+        font-size: 0.85em;
+      }
 
-  .schedule-table .time-label {
-    font-size: 0.9em;
-  }
+      .time-label {
+        font-size: 0.9em;
+      }
 
-  .schedule-table .schedule-checkbox {
-    width: 18px;
-    height: 18px;
+      .schedule-checkbox {
+        width: 18px;
+        height: 18px;
+      }
+    }
   }
 }
