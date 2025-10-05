@@ -42,7 +42,7 @@ def band_gen():
       return redirect(url_for("band_gen"))
 
     user_db = UserDatabaseManager()
-    user = user_db.get_user(line_user_id=current_user.get_id())
+    user = user_db.get_user(email=current_user.get_id())
     if not user:
       return redirect(url_for("logout"))
 
@@ -70,7 +70,7 @@ def band_gen():
 def bands_list():
   """ユーザーが所属するバンドの一覧を表示する"""
   user_db = UserDatabaseManager()
-  user = user_db.get_user(line_user_id=current_user.get_id())
+  user = user_db.get_user(email=current_user.get_id())
   if not user:
     return redirect(url_for("logout"))
 
@@ -125,7 +125,7 @@ def band():
 
   user_db = UserDatabaseManager()
   creator = user_db.get_user(band.creator_user_id)
-  is_creator = creator and current_user.id == creator.line_user_id
+  is_creator = creator and current_user.id == creator.email
 
   return render_template(
     "band/band.html",
@@ -153,7 +153,7 @@ def join_band():
     abort(404, "指定されたバンドが見つかりません。")
 
   user_db = UserDatabaseManager()
-  user = user_db.get_user(line_user_id=current_user.get_id())
+  user = user_db.get_user(email=current_user.get_id())
   if not user:
     return redirect(url_for("logout"))
 
@@ -175,7 +175,7 @@ def band_leave():
 
   user_db = UserDatabaseManager()
   band_db = BandDatabaseManager()
-  user = user_db.get_user(line_user_id=current_user.get_id())
+  user = user_db.get_user(email=current_user.get_id())
   band = band_db.get_band(token=token)
 
   if not user or not band:
@@ -201,7 +201,7 @@ def band_delete():
 
   user_db = UserDatabaseManager()
   band_db = BandDatabaseManager()
-  user = user_db.get_user(line_user_id=current_user.get_id())
+  user = user_db.get_user(email=current_user.get_id())
   band = band_db.get_band(token=token)
 
   if not user or not band:

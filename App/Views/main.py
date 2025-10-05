@@ -1,137 +1,66 @@
-import hashlib
-import json
-import os
-import requests
-from urllib.parse import urlencode
-
-from flask import abort, flash, redirect, render_template, request, session, url_for
-from flask_login import current_user, login_required, login_user, logout_user
+from flask import render_template, request, redirect, url_for, abort, session, flash
+from google.oauth2 import id_token
+from google.auth.transport import requests as google_requests
+from flask_login import login_user, logout_user, login_required, current_user
 
 from ..app_init_ import app
-from ..auth import User
+from ..auth import flow, User
 from ..db.user import UserDatabaseManager
 
-from const import (
-  CLIENT_ID,
-  CLIENT_SECRET,
-  LINE_AUTHORIZATION_URL,
-  LINE_TOKEN_URL,
-  LINE_USER_INFO_URL,
-  REDIRECT_URI,
-)
+from const import GOOGLE_CLIENT_ID
+
 
 
 @app.route("/")
 def index():
-  """未ログイン時のトップページ"""
   if current_user.is_authenticated:
-    return redirect(url_for("top"))
-  return render_template("index.html")
+    return redirect("top")
+
+  return render_template('index.html')
 
 
-@app.route("/login")
+@app.route('/login')
 def login():
-  """LINEログインを開始する"""
-  # CSRF対策のためのstateを生成
-  state = hashlib.sha256(os.urandom(32)).hexdigest()
-  session["state"] = state
-
-  # LINEの認可URLにリダイレクト
-  params = {
-    "response_type": "code",
-    "client_id": CLIENT_ID,
-    "redirect_uri": REDIRECT_URI,
-    "state": state,
-    "scope": "profile openid",
-  }
-  return redirect(f"{LINE_AUTHORIZATION_URL}?{urlencode(params)}")
+  authorization_url, state = flow.authorization_url()
+  session['state'] = state
+  return redirect(authorization_url)
 
 
-@app.route("/callback")
+@app.route('/callback')
 def callback():
-  """LINEからのコールバックを処理し、ユーザをログインさせる"""
-  # stateの検証
-  received_state = request.args.get("state")
-  expected_state = session.get("state")
-  if received_state != expected_state:
+  flow.fetch_token(authorization_response=request.url)
+
+  if not session['state'] == request.args['state']:
     abort(400, "State mismatch error")
 
-  # 認可コードの取得
-  code = request.args.get("code")
-  if not code:
-    abort(400, "Authorization code not found.")
+  credentials = flow.credentials
+  request_session = google_requests.Request()
 
-  # アクセストークンの取得
-  try:
-    token_payload = {
-      "grant_type": "authorization_code",
-      "code": code,
-      "redirect_uri": REDIRECT_URI,
-      "client_id": CLIENT_ID,
-      "client_secret": CLIENT_SECRET,
-    }
+  id_info = id_token.verify_oauth2_token(
+    credentials.id_token, request_session, GOOGLE_CLIENT_ID # type: ignore
+  )
+  user_email = id_info.get("email")
 
-    # requestsを使用してPOSTリクエストを送信
-    response = requests.post(LINE_TOKEN_URL, data=token_payload)
-    response.raise_for_status()  # HTTPエラーがあれば例外を発生させる
+  user = User(user_email)
+  login_user(user, remember=True)
 
-    token_response = response.json()
-    access_token = token_response.get("access_token")
-
-    if not access_token:
-      abort(500, "Access token not found in response.")
-
-  except requests.exceptions.RequestException as e:
-    # エラーレスポンスがあればその内容をログに出力
-    error_response = e.response.text if e.response else "No response"
-    print(f"Error fetching token: {e}")
-    print(f"Response body: {error_response}")
-    abort(500, "Failed to get access token.")
-
-  # ユーザープロフィールの取得
-  try:
-    headers = {"Authorization": f"Bearer {access_token}"}
-
-    # requestsを使用してGETリクエストを送信
-    response = requests.get(LINE_USER_INFO_URL, headers=headers)
-    response.raise_for_status() # HTTPエラーがあれば例外を発生させる
-
-    user_profile = response.json()
-
-    # LINEのプロフィールから'userId'を取得
-    user_id = user_profile.get("userId")
-    if not user_id:
-      abort(500, "User ID not found in LINE profile.")
-
-    # ユーザーオブジェクトを作成し、ログイン処理
-    user = User(user_id)
-    login_user(user, remember=True)
-    return redirect(url_for("top"))
-
-  except requests.exceptions.RequestException as e:
-    error_response = e.response.text if e.response else "No response"
-    print(f"Error fetching user profile: {e}")
-    print(f"Response body: {error_response}")
-    abort(500, "Failed to get user profile.")
+  return redirect(url_for('top'))
 
 
-@app.route("/logout")
+@app.route('/logout')
 @login_required
 def logout():
-  """ログアウト処理"""
   logout_user()
-  return redirect(url_for("index"))
+  return redirect('/')
 
 
 @app.route("/top")
 @login_required
 def top():
-  """ログイン後のトップページ"""
   user_db = UserDatabaseManager()
-  user_id = current_user.get_id()
-  user = user_db.get_user(line_user_id=user_id)
+  user_email = current_user.get_id()
+  user = user_db.get_user(email=user_email)
 
-  # ユーザーがDBに存在しない場合は登録ページへ
   if not user:
     return redirect(url_for("resist"))
 
@@ -141,12 +70,10 @@ def top():
 @app.route("/resist", methods=["GET", "POST"])
 @login_required
 def resist():
-  """新規ユーザー登録ページ"""
   user_db = UserDatabaseManager()
-  user_id = current_user.get_id()
+  user_email = current_user.get_id()
 
-  # 既に登録済みの場合はトップページへ
-  if user_db.get_user(user_id=user_id):
+  if user_db.get_user(email=user_email):
     return redirect(url_for("top"))
 
   if request.method == "POST":
@@ -156,13 +83,13 @@ def resist():
       flash("ニックネームを入力してください。", "error")
       return redirect(url_for("resist"))
 
-    # データベースにユーザー情報を追加
-    new_user_id_in_db = user_db.add(line_user_id=user_id, name=nickname.strip())
+    new_user_id = user_db.add(email=user_email, name=nickname.strip())
 
-    if new_user_id_in_db:
+    if new_user_id:
       return redirect(url_for("top"))
+
     else:
       flash("登録中にエラーが発生しました。もう一度お試しください。", "error")
       return redirect(url_for("resist"))
 
-  return render_template("resist.html", line_user_id=user_id)
+  return render_template("resist.html", user_email=user_email)
