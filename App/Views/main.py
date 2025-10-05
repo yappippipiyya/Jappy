@@ -1,8 +1,8 @@
 import hashlib
 import json
 import os
-import urllib.parse
-import urllib.request
+import requests
+from urllib.parse import urlencode
 
 from flask import abort, flash, redirect, render_template, request, session, url_for
 from flask_login import current_user, login_required, login_user, logout_user
@@ -11,8 +11,14 @@ from ..app_init_ import app
 from ..auth import User
 from ..db.user import UserDatabaseManager
 
-from const import CLIENT_ID, CLIENT_SECRET, LINE_AUTHORIZATION_URL, LINE_TOKEN_URL, LINE_USER_INFO_URL, REDIRECT_URI
-
+from const import (
+  CLIENT_ID,
+  CLIENT_SECRET,
+  LINE_AUTHORIZATION_URL,
+  LINE_TOKEN_URL,
+  LINE_USER_INFO_URL,
+  REDIRECT_URI,
+)
 
 
 @app.route("/")
@@ -36,9 +42,9 @@ def login():
     "client_id": CLIENT_ID,
     "redirect_uri": REDIRECT_URI,
     "state": state,
-    "scope": "profile openid",  # ユーザープロフィール取得のために'profile'スコープを指定
+    "scope": "profile openid",
   }
-  return redirect(f"{LINE_AUTHORIZATION_URL}?{urllib.parse.urlencode(params)}")
+  return redirect(f"{LINE_AUTHORIZATION_URL}?{urlencode(params)}")
 
 
 @app.route("/callback")
@@ -57,34 +63,40 @@ def callback():
 
   # アクセストークンの取得
   try:
-    token_request_body = urllib.parse.urlencode({
+    token_payload = {
       "grant_type": "authorization_code",
       "code": code,
       "redirect_uri": REDIRECT_URI,
       "client_id": CLIENT_ID,
       "client_secret": CLIENT_SECRET,
-    }).encode("utf-8")
+    }
 
-    req = urllib.request.Request(
-      LINE_TOKEN_URL, data=token_request_body, method="POST"
-    )
-    with urllib.request.urlopen(req) as f:
-      token_response = json.loads(f.read())
+    # requestsを使用してPOSTリクエストを送信
+    response = requests.post(LINE_TOKEN_URL, data=token_payload)
+    response.raise_for_status()  # HTTPエラーがあれば例外を発生させる
 
+    token_response = response.json()
     access_token = token_response.get("access_token")
+
     if not access_token:
       abort(500, "Access token not found in response.")
 
-  except urllib.error.URLError as e:
-    print(f"Error fetching token: {e.reason}")
+  except requests.exceptions.RequestException as e:
+    # エラーレスポンスがあればその内容をログに出力
+    error_response = e.response.text if e.response else "No response"
+    print(f"Error fetching token: {e}")
+    print(f"Response body: {error_response}")
     abort(500, "Failed to get access token.")
 
   # ユーザープロフィールの取得
   try:
     headers = {"Authorization": f"Bearer {access_token}"}
-    req = urllib.request.Request(LINE_USER_INFO_URL, headers=headers, method="GET")
-    with urllib.request.urlopen(req) as f:
-      user_profile = json.loads(f.read())
+
+    # requestsを使用してGETリクエストを送信
+    response = requests.get(LINE_USER_INFO_URL, headers=headers)
+    response.raise_for_status() # HTTPエラーがあれば例外を発生させる
+
+    user_profile = response.json()
 
     # LINEのプロフィールから'userId'を取得
     user_id = user_profile.get("userId")
@@ -96,8 +108,10 @@ def callback():
     login_user(user, remember=True)
     return redirect(url_for("top"))
 
-  except urllib.error.URLError as e:
-    print(f"Error fetching user profile: {e.reason}")
+  except requests.exceptions.RequestException as e:
+    error_response = e.response.text if e.response else "No response"
+    print(f"Error fetching user profile: {e}")
+    print(f"Response body: {error_response}")
     abort(500, "Failed to get user profile.")
 
 
