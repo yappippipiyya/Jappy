@@ -45,18 +45,25 @@ def schedule_manage():
 
   # 表示範囲の初期化
   dates_to_display = []
-  times_to_display = range(24)
+  # times_to_display = range(24)
 
   if selected_band_id == 0:  # デフォルトスケジュール表示
     if not user_bands:
       # バンドに未所属の場合、今日から14日間を表示
       start_date = date.today()
       end_date = start_date + timedelta(days=13)
+      times_to_display = range(24)
+
     else:
       # 全所属バンドの期間をカバーする日付範囲を計算
       start_date = min(band.start_date for band in user_bands)
       end_date = max(band.end_date for band in user_bands)
+      start_time = min(band.start_time for band in user_bands)
+      end_time = max(band.end_time for band in user_bands)
+      times_to_display = range(start_time.hour, end_time.hour+1)
+
     dates_to_display = list(daterange(start_date, end_date))
+
 
   else:  # 特定のバンドのスケジュール表示
     selected_band = next(
