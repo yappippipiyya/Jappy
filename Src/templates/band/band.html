@@ -53,11 +53,11 @@
             <td class="time-label">{{ "%02d:00" | format(hour) }}</td>
             {% for day in dates %}
               {% set count = schedules_agg.get(day.isoformat(), {}).get(hour, 0) %}
-              {# ★参加メンバーのリストを取得 #}
+              {# 参加メンバーのリストを取得 #}
               {% set members_list = schedules_detail.get(day.isoformat(), {}).get(hour, []) %}
               <td
                 data-count="{{ count }}"
-                {# ★メンバーリストが空でなければ data-members 属性を追加 #}
+                {# メンバーリストが空でなければ data-members 属性を追加 #}
                 {% if members_list %}
                   data-members="{{ members_list|join(',') }}"
                 {% endif %}
@@ -97,7 +97,7 @@
     </div>
   </div>
 
-  {# ★新しく作成するJSファイルを読み込む #}
   <script src="{{ url_for('static', filename='js/band.js') }}"></script>
+  <div id="tooltip" class="schedule-tooltip"></div> <!-- ツールチップ用のdiv -->
 </body>
 </html>
