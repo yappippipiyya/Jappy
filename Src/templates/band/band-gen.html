@@ -63,7 +63,7 @@
           <div class="form-group">
             <label for="end-time">終了時刻</label>
             <select id="end-time" name="end-time" required>
-              {% for h in range(24) %}
+              {% for h in range(25) %}
               <option value="{{ '%02d'|format(h) }}:00">{{ '%02d'|format(h) }}:00</option>
               {% endfor %}
             </select>
