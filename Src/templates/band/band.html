@@ -43,7 +43,11 @@
           <tr>
             <th>時間</th>
             {% for day in dates %}
-            <th>{{ day.strftime('%m/%d') }}<br>{{ day.strftime('%a') }}</th>
+            {% set weekdays = ['月', '火', '水', '木', '金', '土', '日'] %}
+            <th>
+              {{ day.strftime('%m/%d') }}<br>
+              {{ weekdays[day.weekday()] }}
+            </th>
             {% endfor %}
           </tr>
         </thead>
