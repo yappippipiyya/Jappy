@@ -1,4 +1,4 @@
-import pymysql
+import psycopg
 from .base import _get_connection
 
 
@@ -24,14 +24,17 @@ class UserDatabaseManager:
 
   def add(self, email: str, name: str) -> int | None:
     """新しいユーザーを1件追加し、そのユーザーのIDを返す"""
-    sql = "INSERT INTO users (email, name) VALUES (%s, %s);"
+    # RETURNING id を追加して、挿入した行のIDを取得する
+    sql = "INSERT INTO users (email, name) VALUES (%s, %s) RETURNING id;"
     try:
       with self._get_connection() as conn:
         with conn.cursor() as cur:
           cur.execute(sql, (email, name))
           conn.commit()
-          return cur.lastrowid
-    except pymysql.Error as e:
+          # fetchone()で結果を取得する
+          result = cur.fetchone()
+          return result['id'] if result else None
+    except psycopg.Error as e:
       print(f"データベースエラーが発生しました (add): {e}")
       return None
 
@@ -42,11 +45,11 @@ class UserDatabaseManager:
     try:
       with self._get_connection() as conn:
         with conn.cursor() as cur:
-          rows_affected = cur.execute(sql, (email, name, user_id))
+          cur.execute(sql, (email, name, user_id))
           conn.commit()
           # 1行以上更新されていれば成功
-          return rows_affected > 0
-    except pymysql.Error as e:
+          return cur.rowcount > 0
+    except psycopg.Error as e:
       print(f"データベースエラーが発生しました (update): {e}")
       return False
 
@@ -57,11 +60,11 @@ class UserDatabaseManager:
     try:
       with self._get_connection() as conn:
         with conn.cursor() as cur:
-          rows_affected = cur.execute(sql, (user_id,))
+          cur.execute(sql, (user_id,))
           conn.commit()
           # 1行以上削除されていれば成功
-          return rows_affected > 0
-    except pymysql.Error as e:
+          return cur.rowcount > 0
+    except psycopg.Error as e:
       print(f"データベースエラーが発生しました (delete): {e}")
       return False
 
@@ -84,6 +87,6 @@ class UserDatabaseManager:
           cur.execute(sql, args)
           result = cur.fetchone()
           return User(**result) if result else None
-    except pymysql.Error as e:
+    except psycopg.Error as e:
       print(f"データベースエラーが発生しました (get_user): {e}")
       return None

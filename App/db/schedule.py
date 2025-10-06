@@ -2,10 +2,9 @@ import json
 from datetime import date
 from typing import Literal
 
-import pymysql
+import psycopg
 
 from .base import _get_connection
-
 
 
 class Schedule:
@@ -50,7 +49,7 @@ class ScheduleDatabaseManager:
           for row in results:
             row['schedule'] = self._deserialize_schedule(row['schedule'])
             schedules_list.append(Schedule(**row))
-    except pymysql.Error as e:
+    except psycopg.Error as e:
       print(f"データベースエラーが発生しました: {e}")
 
     return schedules_list
@@ -63,7 +62,8 @@ class ScheduleDatabaseManager:
     sql = """
       INSERT INTO schedules (user_id, band_id, schedule)
       VALUES (%s, %s, %s)
-      ON DUPLICATE KEY UPDATE schedule = VALUES(schedule);
+      ON CONFLICT (user_id, band_id) DO UPDATE
+      SET schedule = EXCLUDED.schedule;
     """
     get_sql = "SELECT * FROM schedules WHERE user_id = %s AND band_id = %s;"
 
@@ -80,7 +80,7 @@ class ScheduleDatabaseManager:
             result['schedule'] = self._deserialize_schedule(result['schedule'])
             return Schedule(**result)
           return None
-    except pymysql.Error as e:
+    except psycopg.Error as e:
       print(f"データベースエラーが発生しました: {e}")
       return None
 
@@ -94,10 +94,17 @@ class ScheduleDatabaseManager:
     return json.dumps(str_key_schedule)
 
 
-  def _deserialize_schedule(self, schedule_json: str | None) -> dict[date, list[Literal[0, 1]]]:
-    """JSON文字列をschedule辞書にデシリアライズする"""
-    if not schedule_json:
+  def _deserialize_schedule(self, schedule_data: str | dict | None) -> dict[date, list[Literal[0, 1]]]:
+    """JSON文字列または辞書をschedule辞書にデシリアライズする"""
+    if not schedule_data:
       return {}
 
-    str_key_schedule = json.loads(schedule_json)
+    # psycopgはJSON/JSONB型を自動的にdictにデコードするため、型をチェック
+    if isinstance(schedule_data, str):
+      # pymysqlなど、文字列で返された場合
+      str_key_schedule = json.loads(schedule_data)
+    else:
+      # psycopgなど、既に辞書の場合
+      str_key_schedule = schedule_data
+
     return {date.fromisoformat(k): v for k, v in str_key_schedule.items()}

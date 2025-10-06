@@ -1,27 +1,10 @@
-import pymysql
+import psycopg
 import secrets
 import string
-from datetime import date, time, timedelta
+from datetime import date, time
 
 from .base import _get_connection
 from .user import User
-
-
-
-def _timedelta_to_time(td: timedelta) -> time:
-  """
-  pymysqlが返すtimedeltaオブジェクトをtimeオブジェクトに変換するヘルパー関数
-  """
-  if not isinstance(td, timedelta):
-    return td
-
-  total_seconds = int(td.total_seconds())
-  # 1日の秒数（86400秒）で剰余をとり、日付の繰り越しを無視して時間のみを抽出
-  total_seconds %= 86400
-  hour, remainder = divmod(total_seconds, 3600)
-  minute, second = divmod(remainder, 60)
-
-  return time(hour, minute, second)
 
 
 class Band:
@@ -66,10 +49,12 @@ class BandDatabaseManager:
     成功した場合、(バンドID, トークン) を返す。
     """
     token = self._generate_token()
+    # RETURNING id を追加して、挿入した行のIDを取得する
     sql = """
       INSERT INTO bands
         (name, creator_user_id, token, start_date, end_date, start_time, end_time)
-      VALUES (%s, %s, %s, %s, %s, %s, %s);
+      VALUES (%s, %s, %s, %s, %s, %s, %s)
+      RETURNING id;
     """
     try:
       with self._get_connection() as conn:
@@ -78,9 +63,12 @@ class BandDatabaseManager:
             name, creator_user_id, token, start_date,
             end_date, start_time, end_time
           ))
-          new_band_id = cur.lastrowid
-          if not new_band_id:
-            raise pymysql.Error("バンドの作成に失敗しました。")
+
+          # fetchone()で結果を取得する
+          result = cur.fetchone()
+          if not result:
+            raise psycopg.Error("バンドの作成に失敗しました。")
+          new_band_id = result['id']
 
           # 作成者を最初のメンバーとして追加
           member_sql = "INSERT INTO band_user (user_id, band_id) VALUES (%s, %s);"
@@ -88,7 +76,7 @@ class BandDatabaseManager:
 
           conn.commit()
           return new_band_id, token
-    except pymysql.Error as e:
+    except psycopg.Error as e:
       print(f"データベースエラーが発生しました (create): {e}")
       return None
 
@@ -102,12 +90,12 @@ class BandDatabaseManager:
           cur.execute(sql, (user_id, band_id))
           conn.commit()
           return True
-    except pymysql.IntegrityError:
+    except psycopg.IntegrityError:
       # (user_id, band_id) の組み合わせはUNIQUE制約があるため、
       # 既にメンバーの場合はこのエラーが発生する
       print("ユーザーは既にこのバンドのメンバーです。")
       return False
-    except pymysql.Error as e:
+    except psycopg.Error as e:
       print(f"データベースエラーが発生しました (add_member): {e}")
       return False
 
@@ -120,7 +108,8 @@ class BandDatabaseManager:
     try:
       with self._get_connection() as conn:
         with conn.cursor() as cur:
-          rows_affected = cur.execute(sql, (user_id, band_id))
+          cur.execute(sql, (user_id, band_id))
+          rows_affected = cur.rowcount
 
           # 注意: band_id=0 (個人のデフォルトスケジュール) は削除しない
           if band_id != 0:
@@ -130,7 +119,7 @@ class BandDatabaseManager:
           conn.commit()
           # 1行以上削除されていれば成功
           return rows_affected > 0
-    except pymysql.Error as e:
+    except psycopg.Error as e:
       print(f"データベースエラーが発生しました (remove_member): {e}")
       return False
 
@@ -153,7 +142,7 @@ class BandDatabaseManager:
             cur.execute(sql, (band_id,))
           conn.commit()
           return True
-    except pymysql.Error as e:
+    except psycopg.Error as e:
       print(f"データベースエラーが発生しました (delete_band): {e}")
       return False
 
@@ -176,11 +165,10 @@ class BandDatabaseManager:
           cur.execute(sql, args)
           result = cur.fetchone()
           if result:
-            result['start_time'] = _timedelta_to_time(result['start_time'])
-            result['end_time'] = _timedelta_to_time(result['end_time'])
+            # psycopgはtimeオブジェクトを直接返すため、timedeltaからの変換は不要
             return Band(**result)
           return None
-    except pymysql.Error as e:
+    except psycopg.Error as e:
       print(f"データベースエラーが発生しました (get_band): {e}")
       return None
 
@@ -201,10 +189,9 @@ class BandDatabaseManager:
           cur.execute(sql, (user_id,))
           results = cur.fetchall()
           for row in results:
-            row['start_time'] = _timedelta_to_time(row['start_time'])
-            row['end_time'] = _timedelta_to_time(row['end_time'])
+            # psycopgはtimeオブジェクトを直接返すため、timedeltaからの変換は不要
             bands_list.append(Band(**row))
-    except pymysql.Error as e:
+    except psycopg.Error as e:
       print(f"データベースエラーが発生しました (get_bands): {e}")
     return bands_list
 
@@ -225,7 +212,7 @@ class BandDatabaseManager:
           results = cur.fetchall()
           for row in results:
             users_list.append(User(**row))
-    except pymysql.Error as e:
+    except psycopg.Error as e:
       print(f"データベースエラーが発生しました (get_users): {e}")
     return users_list
 

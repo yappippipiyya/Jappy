@@ -21,3 +21,5 @@ HOST = os.getenv("host", "")
 USER = os.getenv("user", "")
 PASSWORD = os.getenv("password", "")
 DB_NAME = os.getenv("db_name", "")
+
+DATABASE_URL = os.getenv("DATABASE_URL", "")
