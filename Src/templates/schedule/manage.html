@@ -59,7 +59,8 @@
           {% for hour in times %}
           <tr>
             <td class="time-label" data-hour="{{ hour }}">
-              {{ "%02d:00" | format(hour) }}
+              <span class="time-full">{{ "%02d:00" | format(hour) }}</span>
+              <span class="time-short">{{ hour }}</span>
             </td>
             {% for day in dates %}
             <td class="schedule-cell"> <!-- チェックボックスを含むセル -->

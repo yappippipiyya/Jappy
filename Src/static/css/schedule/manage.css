@@ -89,12 +89,59 @@
     th {
       font-weight: bold;
       background-color: #f2f2f2;
-      white-space: nowrap; /* 日付が改行されないように */
     }
 
+    /* 日付ヘッダーを上部に固定 */
+    th.date-header {
+      position: -webkit-sticky;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+
+    /* 角のセルは上下左右に固定 */
+    th.corner-cell {
+      position: -webkit-sticky;
+      position: sticky;
+      top: 0;
+      left: 0;
+      z-index: 3;
+    }
+
+    /* 時間ラベルのセルを左端に固定 */
     .time-label {
+      position: -webkit-sticky;
+      position: sticky;
+      left: 0;
+      z-index: 1;
+      background-color: #fff;
       font-weight: bold;
       white-space: nowrap;
+      transition: width 0.2s ease-in-out, padding 0.2s ease-in-out;
+    }
+
+    /* 時間表示の出し分け設定 */
+    .time-label .time-short {
+      display: none;
+    }
+
+    .time-label .time-full {
+      display: inline;
+    }
+
+    &.is-scrolled .time-label {
+      width: 45px;
+      padding-left: 5px;
+      padding-right: 5px;
+      text-align: center;
+    }
+
+    &.is-scrolled .time-label .time-short {
+      display: inline;
+    }
+
+    &.is-scrolled .time-label .time-full {
+      display: none;
     }
 
     .schedule-checkbox {
@@ -103,32 +150,27 @@
       cursor: pointer;
     }
 
-    /* テーブルヘッダと時間ラベルのUI改善（クリック可能にする） */
     th.date-header,
     td.time-label {
-      cursor: pointer; /* マウスポインターを指カーソルに */
-      user-select: none; /* テキスト選択を禁止 */
-      transition: background-color 0.1s ease-in-out; /* ホバー/アクティブ時のスムーズな変化 */
+      cursor: pointer;
+      user-select: none;
+      transition: background-color 0.1s ease-in-out;
 
       &:hover {
-        background-color: #e0e0e0; /* ホバー時の背景色 */
+        background-color: #e0e0e0;
       }
     }
 
-    /* 角の「時間」セルはホバー対象外 */
     th.corner-cell {
       cursor: default;
-      background-color: #f2f2f2;
-
       &:hover {
-        background-color: #f2f2f2; /* ホバーしても色を変えない */
+        background-color: #f2f2f2;
       }
     }
 
-    /* 一括チェック/解除時にセルをハイライトするクラス */
     .cell-highlight {
-      background-color: rgba(52, 152, 219, 0.1); /* 薄い青色の背景 */
-      transition: background-color 0.1s ease-out; /* ハイライト解除時のスムーズな変化 */
+      background-color: rgba(52, 152, 219, 0.1);
+      transition: background-color 0.1s ease-out;
     }
   }
 }
@@ -139,15 +181,12 @@
 @media (max-width: 768px) {
   .schedule-container {
     padding: 15px;
-
-    h1 {
-      font-size: 1.5rem;
-    }
+    h1 { font-size: 1.5rem; }
   }
 
   .controls {
     flex-direction: column;
-    align-items: stretch; /* 各項目を幅いっぱいに */
+    align-items: stretch;
     gap: 15px;
 
     .control-item {
@@ -156,54 +195,49 @@
       gap: 5px;
 
       &.action-buttons {
-        flex-direction: row; /* ボタンとステータスは横並び */
+        flex-direction: row;
         justify-content: space-between;
         align-items: center;
         width: 100%;
-
-        button { /* 「デフォルトを適用」ボタンに特化 */
-          width: auto; /* ボタンの内容に合わせて幅を調整 */
-          white-space: nowrap; /* テキストが改行されないように */
-          flex-shrink: 0; /* スペースが足りない時にボタンが縮みすぎないように */
+        button {
+          width: auto;
+          white-space: nowrap;
+          flex-shrink: 0;
         }
-
-        #save-status { /* 保存ステータスのテキストも改行させない */
+        #save-status {
           white-space: nowrap;
         }
       }
-
       select {
         width: 100%;
       }
     }
   }
 
-  .table-wrapper {
-    .schedule-table {
-      min-width: unset;
+  .table-wrapper .schedule-table {
+    min-width: unset;
 
-      th,
-      td {
-        padding: 6px 3px;
-      }
+    th, td {
+      padding: 6px 3px;
+    }
 
-      td.time-label {
-        padding: 6px 8px;
-        text-align: left;
-      }
+    td.time-label {
+      padding: 6px 8px;
+      text-align: left;
+    }
 
-      th.date-header {
-        font-size: 0.85em;
-      }
+    &.is-scrolled td.time-label {
+      width: 40px;
+      padding-left: 5px;
+      padding-right: 5px;
+      text-align: center;
+    }
 
-      .time-label {
-        font-size: 0.9em;
-      }
-
-      .schedule-checkbox {
-        width: 18px;
-        height: 18px;
-      }
+    th.date-header { font-size: 0.85em; }
+    .time-label { font-size: 0.9em; }
+    .schedule-checkbox {
+      width: 18px;
+      height: 18px;
     }
   }
 }
