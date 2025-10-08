@@ -81,6 +81,32 @@ class BandDatabaseManager:
       return None
 
 
+  def update_band(
+    self, band_id: int, name: str, start_date: date,
+    end_date: date, start_time: time, end_time: time
+  ) -> bool:
+    """指定されたバンドIDの情報を更新する"""
+    sql = """
+      UPDATE bands
+      SET name = %s, start_date = %s, end_date = %s, start_time = %s, end_time = %s
+      WHERE id = %s;
+    """
+    try:
+      with self._get_connection() as conn:
+        with conn.cursor() as cur:
+          cur.execute(sql, (
+            name, start_date, end_date,
+            start_time, end_time, band_id
+          ))
+          conn.commit()
+          # 1行以上更新されていれば成功
+          return cur.rowcount > 0
+
+    except psycopg.Error as e:
+      print(f"データベースエラーが発生しました (update_band): {e}")
+      return False
+
+
   def add_member(self, user_id: int, band_id: int) -> bool:
     """ユーザーをバンドのメンバーとして追加する"""
     sql = "INSERT INTO band_user (user_id, band_id) VALUES (%s, %s);"
