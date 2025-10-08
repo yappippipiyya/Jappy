@@ -165,6 +165,55 @@ def join_band():
   return redirect(url_for('bands_list'))
 
 
+@app.route("/band/edit", methods=["GET", "POST"])
+@login_required
+def band_edit():
+  """バンド情報の編集ページを表示・処理する (作成者のみ)"""
+  token = request.args.get('token') if request.method == "GET" else request.form.get('token')
+  if not token:
+    abort(400, "バンドのトークンが必要です。")
+
+  user_db = UserDatabaseManager()
+  band_db = BandDatabaseManager()
+  user = user_db.get_user(email=current_user.get_id())
+  band = band_db.get_band(token=token)
+
+  if not band:
+    abort(404, "指定されたバンドが見つかりません。")
+  if not user or band.creator_user_id != user.id:
+    abort(403, "このバンドを編集する権限がありません。")
+
+  if request.method == "POST":
+    band_name = request.form.get("band-name")
+    start_date_str = request.form.get("start-date")
+    end_date_str = request.form.get("end-date")
+    start_time_str = request.form.get("start-time")
+    end_time_str = request.form.get("end-time")
+
+    if not (band_name and start_date_str and end_date_str and start_time_str and end_time_str):
+      flash("すべての項目を入力してください。", "error")
+      return redirect(url_for("band_edit", token=token))
+
+    try:
+      start_date = datetime.strptime(start_date_str, '%Y-%m-%d').date()
+      end_date = datetime.strptime(end_date_str, '%Y-%m-%d').date()
+      start_time = datetime.strptime(start_time_str, '%H:%M').time()
+      end_time = datetime.strptime(end_time_str, '%H:%M').time()
+    except (ValueError, TypeError):
+      flash("日付または時刻の形式が正しくありません。", "error")
+      return redirect(url_for("band_edit", token=token))
+
+    if band_db.update_band(band.id, band_name, start_date, end_date, start_time, end_time):
+      flash("バンド情報を更新しました。", "success")
+      return redirect(url_for("band", token=token))
+    else:
+      flash("バンド情報の更新に失敗しました。", "error")
+      return redirect(url_for("band_edit", token=token))
+
+  # GETリクエストの場合
+  return render_template("band/band-edit.html", band=band)
+
+
 @app.route("/band/leave", methods=["POST"])
 @login_required
 def band_leave():

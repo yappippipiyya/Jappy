@@ -1,0 +1,163 @@
+/*
+ * ----------------------------------------------------------------
+ * コンテナ
+ * ----------------------------------------------------------------
+ */
+.form-container {
+  max-width: 600px;
+  margin: 2em auto;
+  padding: 2.5em;
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+
+  h2 {
+    margin-top: 0;
+    margin-bottom: 0.5em;
+    font-size: 1.8rem;
+    color: #333;
+    text-align: center;
+  }
+
+  p {
+    margin-bottom: 2em;
+    color: #6c757d;
+    text-align: center;
+  }
+}
+
+/*
+ * ----------------------------------------------------------------
+ * フォーム要素
+ * ----------------------------------------------------------------
+ */
+.form-group {
+  margin-bottom: 1.5em;
+
+  label {
+    display: block;
+    margin-bottom: 0.6em;
+    font-weight: 500;
+    color: #333;
+  }
+
+  input,
+  select {
+    width: 100%;
+    padding: 12px 15px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-sizing: border-box;
+    transition: border-color 0.2s, box-shadow 0.2s;
+
+    &:focus {
+      outline: none;
+      border-color: #007bff;
+      box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+    }
+  }
+}
+
+.form-group-row {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 1.5em;
+
+  .form-group {
+    width: 100%;
+    margin-bottom: 0;
+  }
+}
+
+.note {
+  margin-top: 0.5em;
+  margin-bottom: 0 !important; /* pタグのデフォルトマージンを上書き */
+  font-size: 0.85rem;
+  color: #6c757d;
+  text-align: left !important; /* 中央寄せを上書き */
+}
+
+.submit-btn {
+  display: block;
+  width: 100%;
+  padding: 15px;
+  margin-top: 1em;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: white;
+  background-color: #007bff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+}
+
+.cancel-link {
+  display: block;
+  margin-top: 1em;
+  text-align: center;
+  color: #007bff;
+  text-decoration: none;
+  transition: color 0.2s;
+
+  &:hover {
+    color: #0056b3;
+    text-decoration: underline;
+  }
+}
+
+
+/*
+ * ----------------------------------------------------------------
+ * Flashメッセージ
+ * ----------------------------------------------------------------
+ */
+.flash-messages {
+  margin-bottom: 1.5em;
+
+  .flash.error,
+  .flash.success {
+    padding: 1em;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    text-align: center;
+  }
+
+  .flash.error {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+  }
+}
+
+
+/*
+ * ----------------------------------------------------------------
+ * レスポンシブ対応 (スマートフォン)
+ * ----------------------------------------------------------------
+ */
+@media (max-width: 768px) {
+  .form-container {
+    margin: 1em;
+    padding: 1.5em;
+  }
+
+  .form-container h2 {
+    font-size: 1.5rem;
+  }
+
+  .form-group-row {
+    flex-direction: column;
+    gap: 0; /* gapを0にし、form-groupのmargin-bottomを有効にする */
+
+    .form-group {
+      margin-bottom: 1.5em;
+    }
+  }
+}

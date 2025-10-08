@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+
+  <title>バンド情報の編集</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/band/band-edit.css') }}">
+  <link rel="icon" href="{{ url_for('static', filename='icons/favicon.ico') }}">
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-container">
+      <a href="{{ url_for('top') }}" class="site-logo">
+        <img src="{{ url_for('static', filename='icons/jappy.png') }}" alt="ロゴ" class="logo-image">
+      </a>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="form-container">
+      <h2>バンド情報編集</h2>
+      <p>バンド名や期間、時間を変更できます。</p>
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div class="flash-messages">
+          {% for category, message in messages %}
+            <div class="flash {{ category }}">{{ message }}</div>
+          {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+
+      <form method="POST" action="{{ url_for('band_edit') }}">
+        <input type="hidden" name="token" value="{{ band.token }}">
+
+        <div class="form-group">
+          <label for="band-name">バンド名</label>
+          <input type="text" id="band-name" name="band-name" required value="{{ band.name }}">
+        </div>
+
+        <div class="form-group-row">
+          <div class="form-group">
+            <label for="start-date">練習開始日</label>
+            <input type="date" id="start-date" name="start-date" required value="{{ band.start_date.isoformat() }}">
+          </div>
+          <div class="form-group">
+            <label for="end-date">練習終了日</label>
+            <input type="date" id="end-date" name="end-date" required value="{{ band.end_date.isoformat() }}">
+          </div>
+        </div>
+
+        <div class="form-group-row">
+          <div class="form-group">
+            <label for="start-time">開始時間</label>
+            <select id="start-time" name="start-time" required>
+              {% for h in range(24) %}
+              <option value="{{ '%02d'|format(h) }}:00" {% if h == band.start_time.hour %}selected{% endif %}>{{ h }}時台から</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="end-time">終了時間</label>
+            <select id="end-time" name="end-time" required>
+              {% for h in range(24) %}
+              <option value="{{ '%02d'|format(h) }}:00" {% if h == band.end_time.hour %}selected{% endif %}>{{ h }}時台まで</option>
+              {% endfor %}
+            </select>
+            <p class="note">注："21時台まで"＝ 21:00～22:00</p>
+          </div>
+        </div>
+
+        <button type="submit" class="submit-btn">更新する</button>
+      </form>
+      <a href="{{ url_for('band', token=band.token) }}" class="cancel-link">キャンセル</a>
+    </div>
+  </main>
+</body>
+</html>

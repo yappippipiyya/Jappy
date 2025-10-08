@@ -86,6 +86,9 @@
     <div class="band-footer-actions">
       {# 現在のユーザーがバンドの作成者である場合 #}
       {% if is_creator %}
+        <a href="{{ url_for('band_edit', token=band.token) }}" class="btn-action btn-edit">
+          バンド情報を編集する
+        </a>
         <form action="{{ url_for('band_delete') }}" method="POST" id="delete-band-form">
           <input type="hidden" name="token" value="{{ band.token }}">
           <button type="submit" class="btn-action btn-delete">
