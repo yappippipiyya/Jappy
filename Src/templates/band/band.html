@@ -41,7 +41,7 @@
       <table class="schedule-table">
         <thead>
           <tr>
-            <th>時間</th>
+            <th class="corner-cell">時間</th>
             {% for day in dates %}
             {% set weekdays = ['月', '火', '水', '木', '金', '土', '日'] %}
             <th>
@@ -54,7 +54,10 @@
         <tbody>
           {% for hour in times %}
           <tr>
-            <td class="time-label">{{ "%02d:00" | format(hour) }}</td>
+            <td class="time-label">
+              <span class="time-full">{{ "%02d:00" | format(hour) }}</span>
+              <span class="time-short">{{ hour }}</span>
+            </td>
             {% for day in dates %}
               {% set count = schedules_agg.get(day.isoformat(), {}).get(hour, 0) %}
               {# 参加メンバーのリストを取得 #}

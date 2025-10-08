@@ -73,11 +73,40 @@
     white-space: nowrap;
   }
 
+  .corner-cell,
   .time-label {
+    position: -webkit-sticky;
+    position: sticky;
+    left: 0;
+    z-index: 1;
     font-weight: bold;
     background-color: #f8f8f8;
-    white-space: nowrap;
+    transition: width 0.2s ease-in-out, padding 0.2s ease-in-out;
   }
+
+  /* 時間表示の出し分け設定 */
+  .time-label .time-short {
+    display: none;
+  }
+  .time-label .time-full {
+    display: inline;
+  }
+
+  /* スクロールされた時のスタイル */
+  &.is-scrolled .time-label {
+    width: 45px;
+    padding-left: 5px;
+    padding-right: 5px;
+    text-align: center;
+  }
+  &.is-scrolled .time-label .time-short {
+    display: inline;
+  }
+  &.is-scrolled .time-label .time-full {
+    display: none;
+  }
+
+
 
   /* --- セルの色分け --- */
   td {
@@ -117,9 +146,8 @@
   background-color: rgba(44, 62, 80, 0.9);
   border-radius: 6px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  pointer-events: none; /* マウスイベントを邪魔しないようにする */
+  pointer-events: none;
 
-  /* 初期状態は非表示 */
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.2s, visibility 0.2s;
@@ -128,13 +156,11 @@
     opacity: 1;
     visibility: visible;
   }
-
   ul {
     margin: 0;
     padding: 0;
     list-style: none;
   }
-
   li {
     white-space: nowrap;
   }
@@ -163,7 +189,7 @@
 
 .band-footer-actions {
   display: flex;
-  justify-content: flex-end; /* ボタンを右寄せにする */
+  justify-content: flex-end;
   margin-top: 40px;
   padding-top: 20px;
   border-top: 1px solid #eee;
@@ -182,13 +208,10 @@
     }
   }
 
-  /* 退出ボタン */
   .btn-leave {
     color: #fff;
     background-color: #f39c12;
   }
-
-  /* 削除ボタン（危険な操作） */
   .btn-delete {
     color: #fff;
     background-color: #e74c3c;
@@ -215,10 +238,21 @@
     padding: 4px 2px;
   }
 
+  /* ▼▼▼ ここから修正・追加 ▼▼▼ */
   .schedule-table .time-label {
     padding: 4px 6px;
     text-align: left;
   }
+
+  /* スクロール時のスマホ用スタイル */
+  .schedule-table.is-scrolled .time-label {
+    width: 40px;
+    padding-left: 5px;
+    padding-right: 5px;
+    text-align: center;
+  }
+  /* ▲▲▲ ここまで修正・追加 ▲▲▲ */
+
 
   .schedule-table th {
     font-size: 0.85em;
