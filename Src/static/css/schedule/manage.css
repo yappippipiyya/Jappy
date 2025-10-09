@@ -31,6 +31,7 @@
     display: flex;
     align-items: center;
     gap: 10px;
+    flex-wrap: wrap;
 
     label {
       font-weight: bold;
@@ -57,6 +58,18 @@
       }
     }
   }
+}
+
+/*
+ * スケジュールに関する注意書きのスタイル
+ */
+.schedule-notice {
+  font-size: 0.85rem;
+  color: #555;
+  margin-top: 5px;
+  padding: 0;
+  flex-basis: 100%; /* 親要素の幅いっぱいに広がり、下に回り込む */
+  line-height: 1.5;
 }
 
 /*
@@ -193,6 +206,7 @@
       flex-direction: column;
       align-items: flex-start;
       gap: 5px;
+      flex-wrap: nowrap;
 
       &.action-buttons {
         flex-direction: row;
@@ -212,6 +226,11 @@
         width: 100%;
       }
     }
+  }
+
+  .schedule-notice {
+    width: 100%; /* 親要素の幅に合わせる */
+    margin-top: 8px;
   }
 
   .table-wrapper .schedule-table {

@@ -31,6 +31,9 @@
           <option value="{{ band.id }}" {% if selected_band_id == band.id %}selected{% endif %}>{{ band.name }}</option>
           {% endfor %}
         </select>
+        <p class="schedule-notice">
+          注：予定入力後、各バンドにて<strong>"デフォルトを適用"</strong>を忘れずにお願いします
+        </p>
       </div>
 
       <div class="control-item action-buttons">
