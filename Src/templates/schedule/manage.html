@@ -32,7 +32,9 @@
           {% endfor %}
         </select>
         <p class="schedule-notice">
+          {% if selected_band_id == 0 %}
           注：予定入力後、各バンドにて<strong>"デフォルトを適用"</strong>を忘れずにお願いします
+          {% endif %}
         </p>
       </div>
 
