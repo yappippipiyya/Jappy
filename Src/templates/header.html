@@ -1,0 +1,13 @@
+<header class="site-header">
+  <div class="header-container">
+    <a href="{{ url_for('top') }}" class="site-logo">
+      <img src="{{ url_for('static', filename='icons/jappy.png') }}" alt="ロゴ" class="logo-image">
+    </a>
+  </div>
+
+  <div class="header-actions">
+    <button id="theme-toggle-button" class="theme-toggle-button" aria-label="テーマを切り替える">
+      <span class="material-symbols-outlined" id="mode-icon"></span>
+    </button>
+  </div>
+</header>

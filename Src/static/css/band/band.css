@@ -1,5 +1,81 @@
 /*
  * ----------------------------------------------------------------
+ * 色定義
+ * ----------------------------------------------------------------
+ */
+:root {
+  /* コンテナ & 基本要素 */
+  --container-background-color: #fff;
+  --container-shadow-color: rgba(0, 0, 0, 0.05);
+  --border-color-soft: #eee;
+  --border-color-medium: #ddd;
+  --title-color: #2c3e50;
+  --text-color-primary: #555;
+  --text-color-secondary: #7f8c8d;
+  --text-color-table-cell: #333;
+
+  /* テーブル */
+  --table-header-background-color: #f2f2f2;
+  --table-sticky-cell-background-color: #f8f8f8;
+  --table-cell-default-background-color: #f9f9f9;
+  --table-cell-count-0-background-color: #fdfdfd;
+  --table-cell-count-1-background-color: #c8e6c9;
+  --table-cell-count-2-background-color: #a5d6a7;
+  --table-cell-count-3-background-color: #81c784;
+  --table-cell-count-4-background-color: #66bb6a;
+  --table-cell-count-5-background-color: #4caf50;
+  --table-cell-count-5-text-color: white;
+
+  /* ツールチップ */
+  --tooltip-text-color: #fff;
+  --tooltip-background-color: rgba(44, 62, 80, 0.9);
+
+  /* ボタン & リンク */
+  --btn-link-text-color: #fff;
+  --btn-edit-background-color: #3498db;
+  --btn-edit-background-hover-color: #2980b9;
+  --btn-leave-background-color: #f39c12;
+  --btn-delete-background-color: #e74c3c;
+}
+
+:root[theme="dark"] {
+  /* コンテナ & 基本要素 */
+  --container-background-color: #2c2c2c;
+  --container-shadow-color: rgba(0, 0, 0, 0.3);
+  --border-color-soft: #444;
+  --border-color-medium: #555;
+  --title-color: #e8e8e8;
+  --text-color-primary: #cccccc;
+  --text-color-secondary: #a0a0a0;
+  --text-color-table-cell: #e0e0e0;
+
+  /* テーブル */
+  --table-header-background-color: #3a3a3a;
+  --table-sticky-cell-background-color: #3a3a3a;
+  --table-cell-default-background-color: #333333;
+  --table-cell-count-0-background-color: #383838;
+  --table-cell-count-1-background-color: #2a4c3a;
+  --table-cell-count-2-background-color: #31604a;
+  --table-cell-count-3-background-color: #3a755a;
+  --table-cell-count-4-background-color: #448a6b;
+  --table-cell-count-5-background-color: #4caf50;
+  --table-cell-count-5-text-color: white;
+
+  /* ツールチップ */
+  --tooltip-text-color: #e8e8e8;
+  --tooltip-background-color: rgba(26, 26, 26, 0.9);
+
+  /* ボタン & リンク */
+  --btn-link-text-color: #fff;
+  --btn-edit-background-color: #3498db;
+  --btn-edit-background-hover-color: #2980b9;
+  --btn-leave-background-color: #f39c12;
+  --btn-delete-background-color: #e74c3c;
+}
+
+
+/*
+ * ----------------------------------------------------------------
  * バンドコンテナ全体
  * ----------------------------------------------------------------
  */
@@ -7,9 +83,9 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
-  background-color: #fff;
+  background-color: var(--container-background-color);
   border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 10px var(--container-shadow-color);
 }
 
 /*
@@ -21,15 +97,15 @@
   padding-bottom: 15px;
   margin-bottom: 15px;
   text-align: center;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--border-color-soft);
 
   h1 {
     margin-bottom: 10px;
-    color: #2c3e50;
+    color: var(--title-color);
   }
 
   .band-details {
-    color: #555;
+    color: var(--text-color-primary);
 
     .label {
       font-weight: bold;
@@ -39,7 +115,7 @@
 
 .description {
   margin-bottom: 30px;
-  color: #7f8c8d;
+  color: var(--text-color-secondary);
   text-align: center;
 }
 
@@ -64,12 +140,13 @@
     padding: 5px;
     text-align: center;
     vertical-align: middle;
-    border: 1px solid #ddd;
+    border: 1px solid var(--border-color-medium);
   }
 
   th {
     font-weight: bold;
-    background-color: #f2f2f2;
+    background-color: var(--table-header-background-color);
+    color: var(--title-color);
     white-space: nowrap;
   }
 
@@ -80,7 +157,7 @@
     left: 0;
     z-index: 1;
     font-weight: bold;
-    background-color: #f8f8f8;
+    background-color: var(--table-sticky-cell-background-color);
     transition: width 0.2s ease-in-out, padding 0.2s ease-in-out;
   }
 
@@ -111,23 +188,23 @@
   /* --- セルの色分け --- */
   td {
     font-weight: 500;
-    color: #333;
-    background-color: #f9f9f9; /* デフォルトの背景色 */
+    color: var(--text-color-table-cell);
+    background-color: var(--table-cell-default-background-color); /* デフォルトの背景色 */
     transition: background-color 0.2s;
 
     &[data-count="0"] {
-      background-color: #fdfdfd;
+      background-color: var(--table-cell-count-0-background-color);
     }
-    &[data-count="1"] { background-color: #c8e6c9; }
-    &[data-count="2"] { background-color: #a5d6a7; }
-    &[data-count="3"] { background-color: #81c784; }
-    &[data-count="4"] { background-color: #66bb6a; }
-    &[data-count="5"] { background-color: #4caf50; }
+    &[data-count="1"] { background-color: var(--table-cell-count-1-background-color); }
+    &[data-count="2"] { background-color: var(--table-cell-count-2-background-color); }
+    &[data-count="3"] { background-color: var(--table-cell-count-3-background-color); }
+    &[data-count="4"] { background-color: var(--table-cell-count-4-background-color); }
+    &[data-count="5"] { background-color: var(--table-cell-count-5-background-color); }
 
     /* 5人以上は同じ色にする */
     &:not([data-count="0"]):not([data-count="1"]):not([data-count="2"]):not([data-count="3"]):not([data-count="4"]) {
-      color: white;
-      background-color: #4caf50;
+      color: var(--table-cell-count-5-text-color);
+      background-color: var(--table-cell-count-5-background-color);
     }
   }
 }
@@ -142,8 +219,8 @@
   z-index: 1000;
   padding: 8px 12px;
   font-size: 0.9em;
-  color: #fff;
-  background-color: rgba(44, 62, 80, 0.9);
+  color: var(--tooltip-text-color);
+  background-color: var(--tooltip-background-color);
   border-radius: 6px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   pointer-events: none;
@@ -176,14 +253,14 @@
   width: fit-content;
   margin: 20px auto 0;
   padding: 10px 20px;
-  color: #fff;
-  background-color: #3498db;
+  color: var(--btn-link-text-color);
+  background-color: var(--btn-edit-background-color);
   border-radius: 5px;
   text-decoration: none;
   transition: background-color 0.2s;
 
   &:hover {
-    background-color: #2980b9;
+    background-color: var(--btn-edit-background-hover-color);
   }
 }
 
@@ -194,7 +271,7 @@
   gap: 15px;
   margin-top: 40px;
   padding-top: 20px;
-  border-top: 1px solid #eee;
+  border-top: 1px solid var(--border-color-soft);
 
   form {
     margin: 0; /* formのデフォルトマージンをリセット */
@@ -210,6 +287,7 @@
     transition: opacity 0.2s;
     text-decoration: none; /* aタグのスタイル統一 */
     display: inline-block; /* aタグのスタイル統一 */
+    color: var(--btn-link-text-color);
 
     &:hover {
       opacity: 0.8;
@@ -217,16 +295,13 @@
   }
 
   .btn-edit {
-    color: #fff;
-    background-color: #3498db;
+    background-color: var(--btn-edit-background-color);
   }
   .btn-leave {
-    color: #fff;
-    background-color: #f39c12;
+    background-color: var(--btn-leave-background-color);
   }
   .btn-delete {
-    color: #fff;
-    background-color: #e74c3c;
+    background-color: var(--btn-delete-background-color);
   }
 }
 

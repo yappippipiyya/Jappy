@@ -1,5 +1,42 @@
 /*
  * ----------------------------------------------------------------
+ * 色定義
+ * ----------------------------------------------------------------
+ */
+
+:root {
+  --text-color: #333;
+  --link-background-color: #ffffff;
+  --link-border-color: #e0e0e0;
+  --link-shadow-color: rgba(0, 0, 0, 0.05);
+  --link-shadow-hover-color: rgba(0, 0, 0, 0.1);
+  --logout-text-color: white;
+  --logout-background-color: #5c5c5c;
+  --logout-border-color: black;
+  --disabled-text-color: #6c757d;
+  --disabled-background-color: #e9ecef;
+  --icon-color: #ffd012;
+  --logo-text-color: black;
+}
+
+:root[theme="dark"] {
+  --text-color: #e8e8e8;
+  --link-background-color: #333333;
+  --link-border-color: #4d4d4d;
+  --link-shadow-color: rgba(0, 0, 0, 0.2);
+  --link-shadow-hover-color: rgba(0, 0, 0, 0.35);
+  --logout-text-color: #ffffff;
+  --logout-background-color: #7d7d7d;
+  --logout-border-color: #a0a0a0;
+  --disabled-text-color: #888888;
+  --disabled-background-color: #2a2a2a;
+  --icon-color: #ffd012;
+  --logo-text-color: #ffffff;
+}
+
+
+/*
+ * ----------------------------------------------------------------
  * 基本スタイル
  * ----------------------------------------------------------------
  */
@@ -32,42 +69,42 @@ body {
   gap: 15px;
   padding: 15px 20px;
   font-weight: 500;
-  color: #333;
-  background-color: #ffffff;
-  border: 1px solid #e0e0e0;
+  color: var(--text-color);
+  background-color: var(--link-background-color);
+  border: 1px solid var(--link-border-color);
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 8px var(--link-shadow-color);
   text-decoration: none;
   transition: transform 0.2s, box-shadow 0.2s;
 
   &:not(.disabled):hover {
     transform: translateY(-3px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px var(--link-shadow-hover-color);
   }
 
   /* --- ログアウトボタンのスタイル --- */
   &.logout {
-    color: white;
-    background-color: #5c5c5c;
-    border: 1px solid black;
+    color: var(--logout-text-color);
+    background-color: var(--logout-background-color);
+    border: 1px solid var(--logout-border-color);
   }
 
   /* --- 無効化時のスタイル --- */
   &.disabled {
-    color: #6c757d;
-    background-color: #e9ecef;
+    color: var(--disabled-text-color);
+    background-color: var(--disabled-background-color);
     opacity: 0.8;
     pointer-events: none;
     cursor: not-allowed;
 
     .material-symbols-outlined {
-      color: #6c757d;
+      color: var(--disabled-text-color);
     }
   }
 
   .material-symbols-outlined {
     font-size: 28px;
-    color: #ffd012;
+    color: var(--icon-color);
   }
 }
 
@@ -77,15 +114,6 @@ body {
  * ----------------------------------------------------------------
  */
 @media (max-width: 768px) {
-  .site-logo {
-    font-size: 1.5rem;
-    color: black;
-
-    img {
-      height: 25px;
-    }
-  }
-
   .container {
     padding: 0 15px;
   }

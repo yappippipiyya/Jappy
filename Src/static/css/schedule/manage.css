@@ -1,17 +1,71 @@
 /*
+ * ----------------------------------------------------------------
+ * 色定義
+ * ----------------------------------------------------------------
+ */
+:root {
+  /* コンテナ & 基本要素 */
+  --container-background-color: #fff;
+  --container-shadow-color: rgba(0, 0, 0, 0.05);
+  --text-color-primary: #333; /* 基本文字色 */
+  --title-color: #2c3e50;
+  --text-color-secondary: #555;
+  --status-text-color: #666;
+  --border-color: #ccc;
+
+  /* 操作エリア */
+  --button-text-color: #fff;
+  --button-background-color: #3498db;
+  --button-background-hover-color: #2980b9;
+  --button-border-color: #3498db;
+  --checkbox-accent-color: #20a939;
+
+  /* テーブル */
+  --table-header-background-color: #f2f2f2;
+  --table-time-label-background-color: #fff;
+  --table-hover-background-color: #e0e0e0;
+  --table-highlight-background-color: rgba(52, 152, 219, 0.1);
+}
+
+:root[theme="dark"] {
+  /* コンテナ & 基本要素 */
+  --container-background-color: #2c2c2c;
+  --container-shadow-color: rgba(0, 0, 0, 0.3);
+  --text-color-primary: #e8e8e8; /* ダークテーマ用の基本文字色 */
+  --title-color: #e8e8e8;
+  --text-color-secondary: #aaaaaa;
+  --status-text-color: #bbbbbb;
+  --border-color: #555;
+
+  /* 操作エリア */
+  --button-text-color: #fff;
+  --button-background-color: #3498db;
+  --button-background-hover-color: #2980b9;
+  --button-border-color: #3498db;
+  --checkbox-accent-color: #20a939;
+
+  /* テーブル */
+  --table-header-background-color: #3a3a3a;
+  --table-time-label-background-color: #2c2c2c; /* コンテナ背景色と同じにして馴染ませる */
+  --table-hover-background-color: #4a4a4a;
+  --table-highlight-background-color: rgba(52, 152, 219, 0.2);
+}
+
+
+/*
  * スケジュールコンテナの基本スタイル
  */
 .schedule-container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
-  background-color: #fff;
+  background-color: var(--container-background-color);
   border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 10px var(--container-shadow-color);
 
   h1 {
     margin-bottom: 20px;
-    color: #2c3e50;
+    color: var(--title-color);
     text-align: center;
   }
 }
@@ -36,25 +90,26 @@
     label {
       font-weight: bold;
       white-space: nowrap;
+      color: var(--text-color-primary); /* bodyから継承されるが明示的に指定 */
     }
 
     select,
     button {
       padding: 8px 12px;
       font-size: 1rem;
-      border: 1px solid #ccc;
+      border: 1px solid var(--border-color);
       border-radius: 5px;
     }
 
     button {
-      color: #fff;
-      background-color: #3498db;
-      border-color: #3498db;
+      color: var(--button-text-color);
+      background-color: var(--button-background-color);
+      border-color: var(--button-border-color);
       cursor: pointer;
       transition: background-color 0.2s;
 
       &:hover {
-        background-color: #2980b9;
+        background-color: var(--button-background-hover-color);
       }
     }
   }
@@ -65,7 +120,7 @@
  */
 .schedule-notice {
   font-size: 0.85rem;
-  color: #555;
+  color: var(--text-color-secondary);
   margin-top: 5px;
   padding: 0;
   flex-basis: 100%; /* 親要素の幅いっぱいに広がり、下に回り込む */
@@ -77,7 +132,7 @@
  */
 #save-status {
   font-style: italic;
-  color: #666;
+  color: var(--status-text-color);
 }
 
 /*
@@ -96,12 +151,13 @@
       padding: 8px 5px;
       text-align: center;
       vertical-align: middle;
-      border: 1px solid #ccc;
+      border: 1px solid var(--border-color);
+      color: var(--text-color-primary); /* テーブル内の文字色も変数で指定 */
     }
 
     th {
       font-weight: bold;
-      background-color: #f2f2f2;
+      background-color: var(--table-header-background-color);
     }
 
     /* 日付ヘッダーを上部に固定 */
@@ -127,7 +183,7 @@
       position: sticky;
       left: 0;
       z-index: 1;
-      background-color: #fff;
+      background-color: var(--table-time-label-background-color);
       font-weight: bold;
       white-space: nowrap;
       transition: width 0.2s ease-in-out, padding 0.2s ease-in-out;
@@ -161,6 +217,7 @@
       width: 20px;
       height: 20px;
       cursor: pointer;
+      accent-color: var(--checkbox-accent-color);
     }
 
     th.date-header,
@@ -170,19 +227,19 @@
       transition: background-color 0.1s ease-in-out;
 
       &:hover {
-        background-color: #e0e0e0;
+        background-color: var(--table-hover-background-color);
       }
     }
 
     th.corner-cell {
       cursor: default;
       &:hover {
-        background-color: #f2f2f2;
+        background-color: var(--table-header-background-color);
       }
     }
 
     .cell-highlight {
-      background-color: rgba(52, 152, 219, 0.1);
+      background-color: var(--table-highlight-background-color);
       transition: background-color 0.1s ease-out;
     }
   }

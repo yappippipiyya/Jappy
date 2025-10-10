@@ -1,5 +1,47 @@
 /*
  * ----------------------------------------------------------------
+ * 色定義
+ * ----------------------------------------------------------------
+ */
+:root {
+  --background-color: #ffffff;
+
+  /* Flashメッセージ */
+  --flash-warning-text-color: #856404;
+  --flash-warning-background-color: #fff3cd;
+  --flash-warning-border-color: #ffeeba;
+
+  /* ログインボタン */
+  --login-btn-text-color: #444444;
+  --login-btn-background-color: #ffffff;
+  --login-btn-border-color: #dddddd;
+  --login-btn-shadow-color: rgba(0, 0, 0, 0.05);
+  --login-btn-hover-background-color: #f8f8f8;
+  --login-btn-hover-border-color: #cccccc;
+  --login-btn-hover-shadow-color: rgba(0, 0, 0, 0.1);
+}
+
+:root[theme="dark"] {
+  --background-color: #1a1a1a;
+
+  /* Flashメッセージ */
+  --flash-warning-text-color: #ffecb5;
+  --flash-warning-background-color: #664d03;
+  --flash-warning-border-color: #856404;
+
+  /* ログインボタン */
+  --login-btn-text-color: #e8e8e8;
+  --login-btn-background-color: #2a2a2a;
+  --login-btn-border-color: #555555;
+  --login-btn-shadow-color: rgba(0, 0, 0, 0.2);
+  --login-btn-hover-background-color: #4a4a4a;
+  --login-btn-hover-border-color: #777777;
+  --login-btn-hover-shadow-color: rgba(0, 0, 0, 0.3);
+}
+
+
+/*
+ * ----------------------------------------------------------------
  * Flashメッセージ
  * ----------------------------------------------------------------
  */
@@ -19,9 +61,9 @@
 }
 
 .flash-message.warning {
-  color: #856404;
-  background-color: #fff3cd;
-  border-color: #ffeeba;
+  color: var(--flash-warning-text-color);
+  background-color: var(--flash-warning-background-color);
+  border-color: var(--flash-warning-border-color);
 }
 
 
@@ -39,6 +81,7 @@ body {
   padding: 0;
   box-sizing: border-box;
   position: relative;
+  background-color: var(--background-color);
 }
 
 .main-content-wrapper {
@@ -90,16 +133,16 @@ body {
   gap: 12px;
   padding: 10px 24px;
   font-weight: 500;
-  color: #444444;
-  background-color: #ffffff;
-  border: 1px solid #dddddd;
+  color: var(--login-btn-text-color);
+  background-color: var(--login-btn-background-color);
+  border: 1px solid var(--login-btn-border-color);
   border-radius: 50vh;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-  transition: background-color 0.3s, box-shadow 0.3s;
+  box-shadow: 0 1px 2px var(--login-btn-shadow-color);
+  transition: background-color 0.3s, box-shadow 0.3s, border-color 0.3s;
 }
 
 #login-btn:hover {
-  background-color: #f8f8f8;
-  border-color: #cccccc;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: var(--login-btn-hover-background-color);
+  border-color: var(--login-btn-hover-border-color);
+  box-shadow: 0 2px 4px var(--login-btn-hover-shadow-color);
 }

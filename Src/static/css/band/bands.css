@@ -1,5 +1,71 @@
 /*
  * ----------------------------------------------------------------
+ * 色定義
+ * ----------------------------------------------------------------
+ */
+:root {
+  /* コンテナ & 基本要素 */
+  --container-background-color: #fff;
+  --container-shadow-color: rgba(0, 0, 0, 0.05);
+  --title-color: #2c3e50;
+  --subtitle-color: #7f8c8d;
+  --text-color-primary: #555;
+
+  /* Flashメッセージ */
+  --flash-success-text-color: #155724;
+  --flash-success-background-color: #d4edda;
+  --flash-error-text-color: #721c24;
+  --flash-error-background-color: #f8d7da;
+
+  /* カード */
+  --card-background-color: #fdfdfd;
+  --card-border-color: #e0e0e0;
+  --card-shadow-hover-color: rgba(0, 0, 0, 0.08);
+  --card-title-color: #34495e;
+
+  /* アクション要素 */
+  --icon-color: #757575;
+  --icon-button-hover-background-color: #e0e0e0;
+  --tooltip-text-color: #fff;
+  --tooltip-background-color: #2c3e50;
+  --link-button-text-color: #fff;
+  --link-button-background-color: #3498db;
+  --link-button-background-hover-color: #2980b9;
+}
+
+:root[theme="dark"] {
+  /* コンテナ & 基本要素 */
+  --container-background-color: #2c2c2c;
+  --container-shadow-color: rgba(0, 0, 0, 0.3);
+  --title-color: #e8e8e8;
+  --subtitle-color: #a0a0a0;
+  --text-color-primary: #cccccc;
+
+  /* Flashメッセージ */
+  --flash-success-text-color: #c3e6cb;
+  --flash-success-background-color: #1c4d29;
+  --flash-error-text-color: #f5c6cb;
+  --flash-error-background-color: #632028;
+
+  /* カード */
+  --card-background-color: #3a3a3a;
+  --card-border-color: #555;
+  --card-shadow-hover-color: rgba(0, 0, 0, 0.25);
+  --card-title-color: #e8e8e8;
+
+  /* アクション要素 */
+  --icon-color: #b0b0b0;
+  --icon-button-hover-background-color: #555555;
+  --tooltip-text-color: #e8e8e8;
+  --tooltip-background-color: #1a1a1a;
+  --link-button-text-color: #fff;
+  --link-button-background-color: #3498db;
+  --link-button-background-hover-color: #2980b9;
+}
+
+
+/*
+ * ----------------------------------------------------------------
  * コンテナ全体
  * ----------------------------------------------------------------
  */
@@ -7,19 +73,19 @@
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
-  background-color: #fff;
+  background-color: var(--container-background-color);
   border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 10px var(--container-shadow-color);
 
   h2 {
     margin-bottom: 10px;
-    color: #2c3e50;
+    color: var(--title-color);
     text-align: center;
   }
 
   > p {
     margin-bottom: 30px;
-    color: #7f8c8d;
+    color: var(--subtitle-color);
     text-align: center;
   }
 }
@@ -38,13 +104,13 @@
     text-align: center;
 
     &.success {
-      color: #155724;
-      background-color: #d4edda;
+      color: var(--flash-success-text-color);
+      background-color: var(--flash-success-background-color);
     }
 
     &.error {
-      color: #721c24;
-      background-color: #f8d7da;
+      color: var(--flash-error-text-color);
+      background-color: var(--flash-error-background-color);
     }
   }
 }
@@ -65,14 +131,14 @@
   justify-content: space-between;
   align-items: center;
   padding: 15px 20px;
-  background-color: #fdfdfd;
-  border: 1px solid #e0e0e0;
+  background-color: var(--card-background-color);
+  border: 1px solid var(--card-border-color);
   border-radius: 8px;
   cursor: pointer;
   transition: box-shadow 0.2s ease-in-out;
 
   &:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 12px var(--card-shadow-hover-color);
   }
 
   /* --- カード左側：バンド情報 --- */
@@ -82,13 +148,13 @@
     .band-name {
       margin: 0 0 10px 0;
       font-size: 1.2em;
-      color: #34495e;
+      color: var(--card-title-color);
     }
 
     p {
       margin: 4px 0;
       font-size: 0.9em;
-      color: #555;
+      color: var(--text-color-primary);
     }
 
     .label {
@@ -121,12 +187,12 @@
       transition: background-color 0.2s;
 
       &:hover {
-        background-color: #e0e0e0;
+        background-color: var(--icon-button-hover-background-color);
       }
 
       .material-icons {
         font-size: 24px;
-        color: #757575;
+        color: var(--icon-color);
       }
     }
 
@@ -136,8 +202,8 @@
       right: 120%; /* ボタンの左側に表示 */
       padding: 5px 10px;
       font-size: 0.8em;
-      color: #fff;
-      background-color: #2c3e50;
+      color: var(--tooltip-text-color);
+      background-color: var(--tooltip-background-color);
       border-radius: 4px;
       white-space: nowrap;
       pointer-events: none; /* メッセージがクリックを妨げないように */
@@ -158,14 +224,14 @@
   width: fit-content;
   margin: 30px auto 0;
   padding: 10px 20px;
-  color: #fff;
-  background-color: #3498db;
+  color: var(--link-button-text-color);
+  background-color: var(--link-button-background-color);
   border-radius: 5px;
   text-decoration: none;
   transition: background-color 0.2s;
 
   &:hover {
-    background-color: #2980b9;
+    background-color: var(--link-button-background-hover-color);
   }
 }
 

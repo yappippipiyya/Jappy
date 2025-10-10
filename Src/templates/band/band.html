@@ -6,18 +6,14 @@
   <meta name="robots" content="noindex, nofollow">
 
   <title>{{ band.name }} のスケジュール</title>
+  <script src="{{ url_for('static', filename='js/theme-color.js') }}"></script>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/band/band.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
   <link rel="icon" href="{{ url_for('static', filename='icons/favicon.ico') }}">
 </head>
 <body>
-  <header class="site-header">
-    <div class="header-container">
-      <a href="{{ url_for('top') }}" class="site-logo">
-        <img src="{{ url_for('static', filename='icons/jappy.png') }}" alt="ロゴ" class="logo-image">
-      </a>
-    </div>
-  </header>
+  {% include "header.html" %}
 
   <div class="band-container">
     <div class="band-header">
