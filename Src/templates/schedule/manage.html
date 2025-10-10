@@ -1,16 +1,10 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="robots" content="noindex, nofollow">
+  {% include "head.html" %}
 
   <title>スケジュール管理</title>
-  <script src="{{ url_for('static', filename='js/theme-color.js') }}"></script>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/schedule/manage.css') }}">
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
-  <link rel="icon" href="{{ url_for('static', filename='icons/favicon.ico') }}">
 </head>
 <body>
   {% include "header.html" %}
