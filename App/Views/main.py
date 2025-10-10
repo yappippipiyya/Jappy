@@ -93,3 +93,8 @@ def resist():
       return redirect(url_for("resist"))
 
   return render_template("resist.html", user_email=user_email)
+
+
+@app.route('/manifest.json')
+def serve_manifest():
+    return send_file('pwa/manifest.json', mimetype='application/manifest+json')
