@@ -107,18 +107,26 @@ def band():
   # 日付と時間ごとの参加可能人数とメンバー名を集計
   schedules_agg = defaultdict(lambda: defaultdict(int))
   schedules_detail = defaultdict(lambda: defaultdict(list))
+  user_comments = []
 
   for schedule_obj in schedules:
     member_name = member_map.get(schedule_obj.user_id)
-    if not member_name or not schedule_obj.schedule:
+    if not member_name:
       continue
 
-    for date_obj, hour_list in schedule_obj.schedule.items():
-      date_str = date_obj.isoformat()
-      for hour, is_available in enumerate(hour_list):
-        if is_available:
-          schedules_agg[date_str][hour] += 1
-          schedules_detail[date_str][hour].append(member_name)
+    if schedule_obj.comment:
+      user_comments.append({
+          'name': member_name,
+          'comment': schedule_obj.comment
+      })
+
+    if schedule_obj.schedule:
+      for date_obj, hour_list in schedule_obj.schedule.items():
+        date_str = date_obj.isoformat()
+        for hour, is_available in enumerate(hour_list):
+          if is_available:
+            schedules_agg[date_str][hour] += 1
+            schedules_detail[date_str][hour].append(member_name)
 
   dates_to_display = list(daterange(band.start_date, band.end_date))
   times_to_display = range(band.start_time.hour, band.end_time.hour+1)
@@ -135,7 +143,8 @@ def band():
     times=list(times_to_display),
     schedules_agg=schedules_agg,
     schedules_detail=schedules_detail,
-    total_members=total_members
+    total_members=total_members,
+    user_comments=user_comments
   )
 
 

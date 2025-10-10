@@ -19,6 +19,8 @@
   --button-background-hover-color: #2980b9;
   --button-border-color: #3498db;
   --checkbox-accent-color: #20a939;
+  --input-background-color: #fff; /* 入力欄の背景色 */
+  --input-focus-border-color: #3498db; /* フォーカス時の枠線色 */
 
   /* テーブル */
   --table-header-background-color: #f2f2f2;
@@ -43,6 +45,8 @@
   --button-background-hover-color: #2980b9;
   --button-border-color: #3498db;
   --checkbox-accent-color: #20a939;
+  --input-background-color: #3a3a3a; /* ダークテーマ用の入力欄背景色 */
+  --input-focus-border-color: #3498db; /* フォーカス時の枠線色 */
 
   /* テーブル */
   --table-header-background-color: #3a3a3a;
@@ -99,6 +103,8 @@
       font-size: 1rem;
       border: 1px solid var(--border-color);
       border-radius: 5px;
+      background-color: var(--input-background-color);
+      color: var(--text-color-primary);
     }
 
     button {
@@ -246,6 +252,39 @@
 }
 
 /*
+ * 備考欄
+ */
+.comment-wrapper {
+  margin-top: 25px;
+
+  label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: var(--text-color-primary);
+  }
+
+  .comment-textarea {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    line-height: 1.6;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    background-color: var(--input-background-color);
+    color: var(--text-color-primary);
+    resize: vertical; /* 縦方向のみリサイズ可能に */
+    transition: border-color 0.2s, box-shadow 0.2s;
+
+    &:focus {
+      outline: none;
+      border-color: var(--input-focus-border-color);
+      box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+    }
+  }
+}
+
+/*
  * レスポンシブ対応 (スマートフォン向け)
  */
 @media (max-width: 768px) {
@@ -314,6 +353,14 @@
     .schedule-checkbox {
       width: 18px;
       height: 18px;
+    }
+  }
+
+  .comment-wrapper {
+    margin-top: 20px;
+
+    .comment-textarea {
+      font-size: 0.95rem;
     }
   }
 }

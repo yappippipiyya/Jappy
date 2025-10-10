@@ -1,7 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
   const bandSelector = document.getElementById('band-selector');
   const saveStatus = document.getElementById('save-status');
-  let isDirty = false; // スケジュールに変更があったかどうかのフラグ
+  const commentInput = document.getElementById('comment-input'); // 備考欄の要素を取得
+  let isDirty = false; // スケジュールや備考欄に変更があったかどうかのフラグ
 
   const dateHeaders = document.querySelectorAll('.date-header');
   const timeLabels = document.querySelectorAll('.time-label');
@@ -21,6 +22,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // 備考欄が変更されたら、変更フラグを立てる
+  if (commentInput) {
+    commentInput.addEventListener('input', () => {
+      isDirty = true;
+      saveStatus.textContent = '変更あり';
+    });
+  }
+
   // 3秒ごとに変更をチェックして自動保存
   setInterval(async () => {
     if (!isDirty) return;
@@ -28,6 +37,8 @@ document.addEventListener('DOMContentLoaded', () => {
     saveStatus.textContent = '保存中...';
     const scheduleData = collectScheduleData();
     const bandId = bandSelector.value;
+    // 備考欄が存在する場合のみ、その値を取得
+    const comment = commentInput ? commentInput.value : '';
 
     try {
       const response = await fetch('/schedule-manage/save', {
@@ -35,7 +46,8 @@ document.addEventListener('DOMContentLoaded', () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           band_id: bandId,
-          schedule: scheduleData
+          schedule: scheduleData,
+          comment: comment,
         }),
       });
 
@@ -59,6 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const hour = parseInt(checkbox.dataset.hour, 10);
 
       if (!schedule[date]) {
+        // 表示されている時間帯に関わらず、常に24時間分の配列を確保
         schedule[date] = Array(24).fill(0);
       }
       schedule[date][hour] = checkbox.checked ? 1 : 0;
@@ -83,10 +96,12 @@ document.addEventListener('DOMContentLoaded', () => {
           const shouldBeChecked = defaultSchedule[date] && defaultSchedule[date][hour] === 1;
           if (checkbox.checked !== shouldBeChecked) {
             checkbox.checked = shouldBeChecked;
-            isDirty = true;
-            saveStatus.textContent = '変更あり';
+            isDirty = true; // 変更があったことをマーク
           }
         });
+        if (isDirty) {
+          saveStatus.textContent = '変更あり'; // 変更があった場合のみ表示を更新
+        }
       } catch (error) {
         console.error('Error applying default schedule:', error);
         alert('デフォルトのスケジュールの適用に失敗しました。');

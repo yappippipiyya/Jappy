@@ -75,6 +75,13 @@
         </tbody>
       </table>
     </div>
+
+    {% if selected_band_id != 0 %}
+    <div class="comment-wrapper">
+      <label for="comment-input">備考欄</label>
+      <textarea id="comment-input" class="comment-textarea" rows="4" placeholder="バンドメンバーへの連絡事項など自由に入力してください">{{ comment or '' }}</textarea>
+    </div>
+    {% endif %}
   </div>
 
   <script src="{{ url_for('static', filename='js/schedule-manage.js') }}"></script>

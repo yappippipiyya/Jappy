@@ -307,6 +307,52 @@
 
 /*
  * ----------------------------------------------------------------
+ * 備考欄セクション
+ * ----------------------------------------------------------------
+ */
+.comments-section {
+  margin-top: 40px;
+}
+
+.comments-section h2 {
+  margin-bottom: 20px;
+  text-align: center;
+  color: var(--title-color);
+  font-size: 1.5rem;
+}
+
+.comment-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 15px;
+}
+
+.comment-item {
+  background-color: var(--table-cell-count-0-background-color);
+  border: 1px solid var(--border-color-medium);
+  border-radius: 6px;
+  padding: 15px 20px;
+}
+
+.comment-author {
+  font-weight: bold;
+  margin: 0 0 10px 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border-color-soft);
+  color: var(--title-color);
+}
+
+.comment-body {
+  color: var(--text-color-primary);
+  line-height: 1.6;
+  white-space: pre-wrap; /* 改行をそのまま表示 */
+  word-wrap: break-word; /* 長い単語などを折り返す */
+}
+
+/*
+ * ----------------------------------------------------------------
  * レスポンシブ対応 (スマートフォン)
  * ----------------------------------------------------------------
  */
@@ -355,5 +401,22 @@
   .band-footer-actions .btn-action {
     width: 100%;
     text-align: center;
+  }
+
+  .comments-section {
+    margin-top: 30px;
+  }
+  .comments-section h2 {
+    font-size: 1.3rem;
+  }
+  .comment-item {
+    padding: 12px 15px;
+  }
+  /* ===== ここまで追加 ===== */
+
+  .band-footer-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
   }
 }

@@ -71,6 +71,20 @@
       </table>
     </div>
 
+    {% if user_comments %}
+    <div class="comments-section">
+      <h2>メンバーの備考</h2>
+      <ul class="comment-list">
+        {% for item in user_comments %}
+        <li class="comment-item">
+          <p class="comment-author">{{ item.name }}</p>
+          <div class="comment-body">{{ item.comment }}</div>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
     <a href="{{ url_for('bands_list') }}" class="back-link">バンド一覧に戻る</a>
 
     <div class="band-footer-actions">

@@ -39,9 +39,11 @@ def schedule_manage():
   # ユーザーの全スケジュール情報を取得し、band_idをキーとする辞書に変換
   all_schedules = schedule_db_manager.get_schedules(user_id=user.id)
   schedules_by_band = {s.band_id: s.schedule for s in all_schedules}
+  comments_by_band = {s.band_id: s.comment for s in all_schedules}
 
   # 表示するスケジュールを決定
   current_schedule = schedules_by_band.get(selected_band_id, {})
+  current_comment = comments_by_band.get(selected_band_id, None)
 
   # 表示範囲の初期化
   dates_to_display = []
@@ -93,6 +95,7 @@ def schedule_manage():
     dates=dates_to_display,
     times=list(times_to_display),  # rangeオブジェクトをリストに変換
     schedule_data=current_schedule_str_keys,
+    comment=current_comment
   )
 
 
@@ -113,6 +116,7 @@ def save_schedule():
 
   band_id = data["band_id"]
   schedule_str_keys = data["schedule"]
+  comment = data.get("comment", "")
 
   # キーをdateオブジェクトに変換し、チェックが入っている日付のみを保存対象とする
   schedule_to_save = {}
@@ -125,7 +129,7 @@ def save_schedule():
         # 不正な日付フォーマットはスキップ
         continue
 
-  schedule_db_manager.update_schedule(user.id, schedule_to_save, band_id)
+  schedule_db_manager.update_schedule(user.id, schedule_to_save, band_id, comment)
   return jsonify({"status": "success", "message": "Schedule updated."})
 
 

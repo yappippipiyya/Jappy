@@ -10,16 +10,17 @@ from .base import _get_connection
 class Schedule:
   """スケジュール情報を格納するためのデータクラス"""
 
-  def __init__(self, id: int, user_id: int, band_id: int, schedule: dict[date, list[Literal[0, 1]]]):
+  def __init__(self, id: int, user_id: int, band_id: int, schedule: dict[date, list[Literal[0, 1]]], comment: str):
     self.id = id
     self.user_id = user_id
     self.band_id = band_id
     self.schedule = schedule
+    self.comment = comment
 
   def __repr__(self):
     return (
       f"Schedule(id={self.id}, user_id='{self.user_id}', "
-      f"band_id='{self.band_id}', schedule={self.schedule})"
+      f"band_id='{self.band_id}', schedule={self.schedule}, comment={self.comment})"
     )
 
 
@@ -55,22 +56,22 @@ class ScheduleDatabaseManager:
     return schedules_list
 
 
-  def update_schedule(self, user_id: int, schedule: dict[date, list[Literal[0, 1]]], band_id: int = 0) -> Schedule | None:
+  def update_schedule(self, user_id: int, schedule: dict[date, list[Literal[0, 1]]], band_id: int = 0, comment: str | None = None) -> Schedule | None:
     """スケジュールを更新または新規作成する (UPSERT)"""
     json_schedule = self._serialize_schedule(schedule)
-
     sql = """
-      INSERT INTO schedules (user_id, band_id, schedule)
-      VALUES (%s, %s, %s)
+      INSERT INTO schedules (user_id, band_id, schedule, comment)
+      VALUES (%s, %s, %s, %s)
       ON CONFLICT (user_id, band_id) DO UPDATE
-      SET schedule = EXCLUDED.schedule;
+      SET schedule = EXCLUDED.schedule,
+          comment = EXCLUDED.comment;
     """
     get_sql = "SELECT * FROM schedules WHERE user_id = %s AND band_id = %s;"
 
     try:
       with self._get_connection() as conn:
         with conn.cursor() as cur:
-          cur.execute(sql, (user_id, band_id, json_schedule))
+          cur.execute(sql, (user_id, band_id, json_schedule, comment))
           conn.commit()
 
           # 更新/挿入したレコードを取得してオブジェクトとして返す
