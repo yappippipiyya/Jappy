@@ -2,7 +2,7 @@
   "name": "Jappy",
   "short_name": "Jappy",
   "start_url": "/top",
-  "scope": "/top",
+  "scope": "/",
   "icons": [
     {
       "src": "/static/icons/icon-128.png",
