@@ -24,7 +24,7 @@
 
   /* テーブル */
   --table-header-background-color: #f2f2f2;
-  --table-time-label-background-color: #fff;
+  --table-time-label-background-color: #f2f2f2;
   --table-hover-background-color: #e0e0e0;
   --table-highlight-background-color: rgba(52, 152, 219, 0.1);
 }
@@ -50,7 +50,7 @@
 
   /* テーブル */
   --table-header-background-color: #3a3a3a;
-  --table-time-label-background-color: #2c2c2c; /* コンテナ背景色と同じにして馴染ませる */
+  --table-time-label-background-color: #3a3a3a;
   --table-hover-background-color: #4a4a4a;
   --table-highlight-background-color: rgba(52, 152, 219, 0.2);
 }

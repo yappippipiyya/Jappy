@@ -16,7 +16,7 @@
 
   /* テーブル */
   --table-header-background-color: #f2f2f2;
-  --table-sticky-cell-background-color: #f8f8f8;
+  --table-sticky-cell-background-color: #f2f2f2;
   --table-cell-default-background-color: #f9f9f9;
   --table-cell-count-0-background-color: #fdfdfd;
   --table-cell-count-1-background-color: #c8e6c9;
@@ -52,8 +52,8 @@
   /* テーブル */
   --table-header-background-color: #3a3a3a;
   --table-sticky-cell-background-color: #3a3a3a;
-  --table-cell-default-background-color: #333333;
-  --table-cell-count-0-background-color: #383838;
+  --table-cell-default-background-color: #2c2c2c;
+  --table-cell-count-0-background-color: #2c2c2c;
   --table-cell-count-1-background-color: #2a4c3a;
   --table-cell-count-2-background-color: #31604a;
   --table-cell-count-3-background-color: #3a755a;
@@ -202,7 +202,7 @@
     &[data-count="5"] { background-color: var(--table-cell-count-5-background-color); }
 
     /* 5人以上は同じ色にする */
-    &:not([data-count="0"]):not([data-count="1"]):not([data-count="2"]):not([data-count="3"]):not([data-count="4"]) {
+    &[data-count]:not([data-count="0"]):not([data-count="1"]):not([data-count="2"]):not([data-count="3"]):not([data-count="4"]) {
       color: var(--table-cell-count-5-text-color);
       background-color: var(--table-cell-count-5-background-color);
     }
