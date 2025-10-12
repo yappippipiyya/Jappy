@@ -78,4 +78,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
     tableWrapper.addEventListener('scroll', toggleScrollClass, { passive: true });
   }
+
+  /**
+   * ページ読み込み時に、今日の日付が画面の左端付近に表示されるよう
+   * 自動でスクロールする機能（レスポンシブ・固定列対応版）
+   */
+  const scrollToToday = () => {
+    const tableWrapper = document.querySelector('.table-wrapper');
+    if (!tableWrapper) return;
+
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    const todayDateString = `${year}-${month}-${day}`;
+
+    const todayHeader = document.querySelector(`th[data-date="${todayDateString}"]`);
+
+    const cornerCell = document.querySelector('.corner-cell');
+
+    if (todayHeader && cornerCell) {
+      const columnWidth = todayHeader.offsetWidth;
+
+      const offsetFactor = 0.3;
+      const offset = columnWidth * offsetFactor;
+
+      const scrollPosition = todayHeader.offsetLeft;
+      const fixedColumnWidth = cornerCell.offsetWidth;
+      const correctScrollLeft = scrollPosition - fixedColumnWidth - offset;
+
+      tableWrapper.scrollLeft = Math.max(0, correctScrollLeft);
+    }
+  };
+
+  scrollToToday();
 });

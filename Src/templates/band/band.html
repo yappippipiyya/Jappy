@@ -34,7 +34,7 @@
             <th class="corner-cell">時間</th>
             {% for day in dates %}
             {% set weekdays = ['月', '火', '水', '木', '金', '土', '日'] %}
-            <th>
+            <th data-date="{{ day.isoformat() }}">
               {{ day.strftime('%m/%d') }}<br>
               {{ weekdays[day.weekday()] }}
             </th>
