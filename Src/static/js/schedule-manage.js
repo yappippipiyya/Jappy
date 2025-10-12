@@ -173,4 +173,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
     tableWrapper.addEventListener('scroll', toggleScrollClass, { passive: true });
   }
+
+  /**
+   * ページ読み込み時に、今日の日付が画面の左端付近に表示されるよう
+   * 自動でスクロールする機能
+   */
+  const scrollToToday = () => {
+    const tableWrapper = document.querySelector('.table-wrapper');
+    if (!tableWrapper) return;
+
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    const todayDateString = `${year}-${month}-${day}`;
+
+    const todayHeader = document.querySelector(`.date-header[data-date="${todayDateString}"]`);
+
+    if (todayHeader) {
+      const columnWidth = todayHeader.offsetWidth;
+      const offsetFactor = 0;
+      const offset = columnWidth * offsetFactor;
+      const scrollPosition = todayHeader.offsetLeft;
+
+      tableWrapper.scrollLeft = Math.max(0, scrollPosition - offset);
+    }
+  };
+
+  scrollToToday();
+
 });
