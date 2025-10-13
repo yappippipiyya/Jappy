@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  {% include "head.html" %}
+
+  <title>トップ</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/usage.css') }}">
+</head>
+
+<body>
+  {% include "header.html" %}
+
+  <main class="container">
+    <section class="usage-guide">
+      <h1>使い方ガイド</h1>
+      <ul>
+        <li>
+          <div class="step">
+            <p class="description">ログインします</p>
+            <img src="{{ url_for('static', filename='images/01.png') }}" alt="手順1の画像">
+          </div>
+        </li>
+        <li>
+          <div class="step">
+            <p class="description">バンド一覧を押します</p>
+            <img src="{{ url_for('static', filename='images/02.png') }}" alt="手順2の画像">
+          </div>
+        </li>
+        <li>
+          <div class="step">
+            <p class="description">新しいバンドを作成します（バンドを作成する場合）<br>参加する場合は招待リンクを送ってもらってください</p>
+            <img src="{{ url_for('static', filename='images/03.png') }}" alt="手順3の画像">
+          </div>
+        </li>
+        <li>
+          <div class="step">
+            <p class="description">トップに戻ります（左上タップ）<br>"予定管理"を押します</p>
+            <img src="{{ url_for('static', filename='images/01.png') }}" alt="手順1の画像">
+          </div>
+        </li>
+        <li>
+          <div class="step">
+            <p class="description">いける日にチェックします<br>横軸・縦軸をタップすれば一括でいける</p>
+            <img src="{{ url_for('static', filename='images/04.png') }}" alt="手順4の画像">
+          </div>
+        </li>
+        <li>
+          <div class="step">
+            <p class="description">適用したいバンドを選択し、デフォルトを適用を押します<br>バンドごとにチェックのつけ外しをすることで個別設定もできます</p>
+            <img src="{{ url_for('static', filename='images/05.png') }}" alt="手順5の画像">
+          </div>
+        </li>
+        <li>
+          <div class="step">
+            <p class="description">デフォルトを適用を押した写真ですね</p>
+            <img src="{{ url_for('static', filename='images/06.png') }}" alt="手順6の画像">
+          </div>
+        </li>
+        <li>
+          <div class="step">
+            <p class="description">一番下から備考入力できるってよ</p>
+            <img src="{{ url_for('static', filename='images/07.png') }}" alt="手順7の画像">
+          </div>
+        </li>
+        <li>
+          <div class="step">
+            <p class="description">こんな感じに表示される</p>
+            <img src="{{ url_for('static', filename='images/08.png') }}" alt="手順8の画像">
+          </div>
+        </li>
+      </ul>
+    </section>
+  </main>
+
+</body>
+</html>

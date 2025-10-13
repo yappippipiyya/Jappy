@@ -93,3 +93,9 @@ def resist():
       return redirect(url_for("resist"))
 
   return render_template("resist.html", user_email=user_email)
+
+
+@app.route("/usage")
+@login_required
+def usage():
+  return render_template("usage.html")

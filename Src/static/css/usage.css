@@ -1,0 +1,53 @@
+/* usage.css */
+
+.usage-guide h1 {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.usage-guide ul {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; /* この行を追加 */
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  gap: 20px; /* アイテム間の隙間 */
+}
+
+.usage-guide li {
+  width: calc(25% - 15px); /* 4列表示を基本とし、gapの値を考慮して調整 */
+  margin-bottom: 20px;
+}
+
+.usage-guide .step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.usage-guide .step img {
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 10px;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 1024px) { /* タブレット表示用にブレークポイントを追加 */
+  .usage-guide li {
+    width: calc(33.333% - 14px);
+  }
+}
+
+@media (max-width: 768px) {
+  .usage-guide li {
+    width: calc(50% - 20px); /* 画面幅が768px以下で2列表示 */
+  }
+}
+
+@media (max-width: 480px) {
+  .usage-guide li {
+    width: 80%; /* 画面幅が480px以下で1列表示 */
+  }
+}
