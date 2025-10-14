@@ -401,6 +401,7 @@
   .band-footer-actions .btn-action {
     width: 100%;
     text-align: center;
+    box-sizing: border-box;
   }
 
   .comments-section {
@@ -412,7 +413,6 @@
   .comment-item {
     padding: 12px 15px;
   }
-  /* ===== ここまで追加 ===== */
 
   .band-footer-actions {
     flex-direction: column;
