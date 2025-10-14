@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  {% include "head.html" %}
+  <title>バンド練管理</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/band-practice/band-practice.css') }}">
+</head>
+<body>
+  {% include "header.html" %}
+
+  <div class="schedule-container">
+    <h1>バンド練管理</h1>
+
+    <div class="controls">
+      <div class="control-item">
+        <label for="band-selector">表示するバンド:</label>
+        <select id="band-selector">
+          <option value="view" {% if selected_band_id == "view" %}selected{% endif %}>全体閲覧</option>
+          {% for band in bands %}
+          <option value="{{ band.id }}" {% if selected_band_id == band.id %}selected{% endif %}>{{ band.name }} (編集)</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="control-item action-buttons">
+        {% if not view_mode %}
+          <span id="save-status"></span>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="table-wrapper">
+      <table class="schedule-table">
+        <thead>
+          <tr>
+            <th class="corner-cell">時間</th>
+            {% for day in dates %}
+            {% set weekdays = ['月', '火', '水', '木', '金', '土', '日'] %}
+            <th class="date-header" data-date="{{ day.isoformat() }}">
+              {{ day.strftime('%m/%d') }}<br>
+              {{ weekdays[day.weekday()] }}
+            </th>
+            {% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for hour in times %}
+          <tr>
+            <td class="time-label" data-hour="{{ hour }}">
+              <span class="time-full">{{ "%02d:00" | format(hour) }}</span>
+              <span class="time-short">{{ hour }}</span>
+            </td>
+            {% for day in dates %}
+            <td class="schedule-cell">
+              {% if view_mode %}
+                {# --- 閲覧モード --- #}
+                {% for band in bands %}
+                  {% if band_schedules.get(band.id) and band_schedules[band.id].get(day.isoformat()) and band_schedules[band.id][day.isoformat()][hour] == 1 %}
+                    <div class="practice-slot" style="background-color: {{ band_colors[band.id] }};" title="{{ band.name }}">
+                      {{ band.name }}
+                    </div>
+                  {% endif %}
+                {% endfor %}
+              {% else %}
+                {# --- 編集モード --- #}
+                <input
+                  type="checkbox"
+                  class="schedule-checkbox"
+                  data-date="{{ day.isoformat() }}"
+                  data-hour="{{ hour }}"
+                  {% if schedule_data.get(day.isoformat()) and schedule_data[day.isoformat()][hour] == 1 %}
+                  checked
+                  {% endif %}
+                >
+              {% endif %}
+            </td>
+            {% endfor %}
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/band-practice.js') }}"></script>
+</body>
+</html>
