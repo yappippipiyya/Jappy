@@ -34,7 +34,6 @@ login_manager.init_app(app)
 
 @login_manager.unauthorized_handler
 def unauthorized():
-  """未認証時のリダイレクト処理"""
   flash('ログインが必要です。', 'warning')
   return redirect(url_for("index"))
 

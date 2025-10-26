@@ -151,7 +151,7 @@ def delete_account():
   band_db = BandDatabaseManager()
   bands = band_db.get_bands(user.id)
   for band in bands:
-    band_db.delete_band(band.id)
+    band_db.remove_member(user_id=user.id, band_id=band.id)
 
   schedule_db = ScheduleDatabaseManager()
   schedule_db.delete_schedules(user.id)
