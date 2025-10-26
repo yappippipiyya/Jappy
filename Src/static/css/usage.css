@@ -1,6 +1,62 @@
-/* ----------------------------------
- * コンテナとヘッダー
- * ---------------------------------- */
+/*
+ * ----------------------------------------------------------------
+ * 色定義
+ * ----------------------------------------------------------------
+ */
+:root {
+  /* --- 基本 --- */
+  --usage-body-bg: #ffffff;
+  --usage-text-color: #212529;
+  --usage-text-muted-color: #666;
+  --usage-border-color: #e0e0e0;
+
+  /* --- プライマリカラー --- */
+  --usage-primary-bg: #007bff;
+  --usage-primary-text: #ffffff;
+  --usage-primary-border: #007bff;
+  --usage-primary-accent-border: #7fbcff;
+
+  /* --- コンポーネント --- */
+  --usage-step-list-bg: #f8f9fa;
+  --usage-step-list-border: #e9ecef;
+  --usage-notice-bg: #fffbe6;
+  --usage-notice-border: #ffe58f;
+}
+
+:root[theme="dark"] {
+  /* --- 基本 --- */
+  --usage-body-bg: #181a1b;
+  --usage-text-color: #e8e6e3;
+  --usage-text-muted-color: #a0a0a0;
+  --usage-border-color: #444;
+
+  /* --- プライマリカラー --- */
+  --usage-primary-bg: #007bff;
+  --usage-primary-text: #ffffff;
+  --usage-primary-border: #007bff;
+  --usage-primary-accent-border: #555;
+
+  /* --- コンポーネント --- */
+  --usage-step-list-bg: #3a3a3a;
+  --usage-step-list-border: #555;
+  --usage-notice-bg: #4d442a;
+  --usage-notice-border: #8c7d4a;
+}
+
+
+/*
+ * ----------------------------------------------------------------
+ * 基本・コンテナ
+ * ----------------------------------------------------------------
+ */
+body {
+  /* 色の指定を変数に変更 */
+  background-color: var(--usage-body-bg);
+  color: var(--usage-text-color);
+  /* このカウンターはレイアウトに関するものなので変更しない */
+  counter-reset: list-counter;
+}
+
 .usage-container {
   max-width: 800px;
   margin: 2em auto;
@@ -8,11 +64,18 @@
   line-height: 1.7;
 }
 
+
+/*
+ * ----------------------------------------------------------------
+ * ヘッダー
+ * ----------------------------------------------------------------
+ */
 .usage-header {
   text-align: center;
   margin-bottom: 3em;
   padding-bottom: 1.5em;
-  border-bottom: 1px solid #e0e0e0;
+  /* 色の指定を変数に変更 */
+  border-bottom: 1px solid var(--usage-border-color);
 }
 
 .usage-header h1 {
@@ -22,13 +85,16 @@
 
 .usage-header p {
   font-size: 1.1rem;
-  color: #666;
+  /* 色の指定を変数に変更 */
+  color: var(--usage-text-muted-color);
 }
 
 
-/* ----------------------------------
+/*
+ * ----------------------------------------------------------------
  * セクション共通スタイル
- * ---------------------------------- */
+ * ----------------------------------------------------------------
+ */
 .usage-section {
   margin-bottom: 3em;
 }
@@ -36,7 +102,7 @@
 .section-title {
   font-size: 1.5rem;
   padding-bottom: 0.5em;
-  border-bottom: 2px solid #007bff;
+  border-bottom: 2px solid var(--usage-primary-border);
   display: flex;
   align-items: center;
   gap: 0.75em;
@@ -44,8 +110,8 @@
 }
 
 .section-title span {
-  background-color: #007bff;
-  color: white;
+  background-color: var(--usage-primary-bg);
+  color: var(--usage-primary-text);
   padding: 0.2em 0.6em;
   border-radius: 4px;
   font-size: 0.9rem;
@@ -56,7 +122,7 @@
   margin-top: 1.5em;
   margin-bottom: 1em;
   padding-left: 0.5em;
-  border-left: 4px solid #7fbcff;
+  border-left: 4px solid var(--usage-primary-accent-border);
 }
 
 .section-content p,
@@ -75,9 +141,11 @@
 }
 
 
-/* ----------------------------------
+/*
+ * ----------------------------------------------------------------
  * リストや注意書きのスタイル
- * ---------------------------------- */
+ * ----------------------------------------------------------------
+ */
 .step-list {
   list-style: none;
   padding-left: 0;
@@ -87,8 +155,8 @@
   position: relative;
   padding: 1em 1em 1em 2.5em;
   margin-bottom: 1em;
-  background-color: #f8f9fa;
-  border: 1px solid #e9ecef;
+  background-color: var(--usage-step-list-bg);
+  border: 1px solid var(--usage-step-list-border);
   border-radius: 5px;
 }
 
@@ -99,8 +167,8 @@
   left: 0.75em;
   top: 50%;
   transform: translateY(-50%);
-  background-color: #007bff;
-  color: white;
+  background-color: var(--usage-primary-bg);
+  color: var(--usage-primary-text);
   width: 1.5em;
   height: 1.5em;
   border-radius: 50%;
@@ -110,46 +178,19 @@
   line-height: 1.5em;
 }
 
-body {
-  counter-reset: list-counter;
-}
-
 .notice {
-  background-color: #fffbe6;
-  border: 1px solid #ffe58f;
-  border-left: 4px solid #ffe58f;
+  background-color: var(--usage-notice-bg);
+  border: 1px solid var(--usage-notice-border);
+  border-left: 4px solid var(--usage-notice-border);
   padding: 1em;
   border-radius: 4px;
 }
 
-
-/* ----------------------------------
- * ダークテーマ対応
- * ---------------------------------- */
-@media (prefers-color-scheme: dark) {
-  .usage-header {
-    border-bottom-color: #444;
-  }
-  .usage-header p {
-    color: #a0a0a0;
-  }
-  .section-content h3 {
-    border-left-color: #555;
-  }
-  .step-list li {
-    background-color: #3a3a3a;
-    border-color: #555;
-  }
-  .notice {
-    background-color: #4d442a;
-    border-color: #8c7d4a;
-    border-left-color: #8c7d4a;
-  }
-}
-
-/* ----------------------------------
- * レスポンシブ対応
- * ---------------------------------- */
+/*
+ * ----------------------------------------------------------------
+ * レスポンシブ対応 (レイアウトは変更しない)
+ * ----------------------------------------------------------------
+ */
 @media (max-width: 768px) {
   .usage-container {
     padding: 1em;
