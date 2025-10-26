@@ -1,53 +1,163 @@
-/* usage.css */
+/* ----------------------------------
+ * コンテナとヘッダー
+ * ---------------------------------- */
+.usage-container {
+  max-width: 800px;
+  margin: 2em auto;
+  padding: 1em 2em;
+  line-height: 1.7;
+}
 
-.usage-guide h1 {
+.usage-header {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 3em;
+  padding-bottom: 1.5em;
+  border-bottom: 1px solid #e0e0e0;
 }
 
-.usage-guide ul {
+.usage-header h1 {
+  font-size: 2rem;
+  margin-bottom: 0.5em;
+}
+
+.usage-header p {
+  font-size: 1.1rem;
+  color: #666;
+}
+
+
+/* ----------------------------------
+ * セクション共通スタイル
+ * ---------------------------------- */
+.usage-section {
+  margin-bottom: 3em;
+}
+
+.section-title {
+  font-size: 1.5rem;
+  padding-bottom: 0.5em;
+  border-bottom: 2px solid #007bff;
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center; /* この行を追加 */
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  gap: 20px; /* アイテム間の隙間 */
-}
-
-.usage-guide li {
-  width: calc(25% - 15px); /* 4列表示を基本とし、gapの値を考慮して調整 */
-  margin-bottom: 20px;
-}
-
-.usage-guide .step {
-  display: flex;
-  flex-direction: column;
   align-items: center;
+  gap: 0.75em;
+  margin-bottom: 1.5em;
+}
+
+.section-title span {
+  background-color: #007bff;
+  color: white;
+  padding: 0.2em 0.6em;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.section-content h3 {
+  font-size: 1.2rem;
+  margin-top: 1.5em;
+  margin-bottom: 1em;
+  padding-left: 0.5em;
+  border-left: 4px solid #7fbcff;
+}
+
+.section-content p,
+.section-content ul,
+.section-content ol {
+  margin-bottom: 1em;
+}
+
+.section-content ul,
+.section-content ol {
+  padding-left: 1.5em;
+}
+
+.section-content li {
+  margin-bottom: 0.75em;
+}
+
+
+/* ----------------------------------
+ * リストや注意書きのスタイル
+ * ---------------------------------- */
+.step-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.step-list li {
+  position: relative;
+  padding: 1em 1em 1em 2.5em;
+  margin-bottom: 1em;
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 5px;
+}
+
+.step-list li::before {
+  counter-increment: list-counter;
+  content: counter(list-counter);
+  position: absolute;
+  left: 0.75em;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: #007bff;
+  color: white;
+  width: 1.5em;
+  height: 1.5em;
+  border-radius: 50%;
+  font-size: 0.9em;
+  font-weight: bold;
   text-align: center;
+  line-height: 1.5em;
 }
 
-.usage-guide .step img {
-  max-width: 100%;
-  height: auto;
-  margin-bottom: 10px;
+body {
+  counter-reset: list-counter;
 }
 
-/* レスポンシブ対応 */
-@media (max-width: 1024px) { /* タブレット表示用にブレークポイントを追加 */
-  .usage-guide li {
-    width: calc(33.333% - 14px);
+.notice {
+  background-color: #fffbe6;
+  border: 1px solid #ffe58f;
+  border-left: 4px solid #ffe58f;
+  padding: 1em;
+  border-radius: 4px;
+}
+
+
+/* ----------------------------------
+ * ダークテーマ対応
+ * ---------------------------------- */
+@media (prefers-color-scheme: dark) {
+  .usage-header {
+    border-bottom-color: #444;
+  }
+  .usage-header p {
+    color: #a0a0a0;
+  }
+  .section-content h3 {
+    border-left-color: #555;
+  }
+  .step-list li {
+    background-color: #3a3a3a;
+    border-color: #555;
+  }
+  .notice {
+    background-color: #4d442a;
+    border-color: #8c7d4a;
+    border-left-color: #8c7d4a;
   }
 }
 
+/* ----------------------------------
+ * レスポンシブ対応
+ * ---------------------------------- */
 @media (max-width: 768px) {
-  .usage-guide li {
-    width: calc(50% - 20px); /* 画面幅が768px以下で2列表示 */
+  .usage-container {
+    padding: 1em;
   }
-}
-
-@media (max-width: 480px) {
-  .usage-guide li {
-    width: 80%; /* 画面幅が480px以下で1列表示 */
+  .usage-header h1 {
+    font-size: 1.6rem;
+  }
+  .section-title {
+    font-size: 1.3rem;
   }
 }

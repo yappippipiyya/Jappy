@@ -2,75 +2,107 @@
 <html lang="ja">
 <head>
   {% include "head.html" %}
-
-  <title>トップ</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+  <title>使い方ガイド - Jappy</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/usage.css') }}">
 </head>
-
 <body>
   {% include "header.html" %}
 
-  <main class="container">
-    <section class="usage-guide">
-      <h1>使い方ガイド</h1>
-      <ul>
-        <li>
-          <div class="step">
-            <p class="description">ログインします</p>
-            <img src="{{ url_for('static', filename='images/01.png') }}" alt="手順1の画像">
-          </div>
-        </li>
-        <li>
-          <div class="step">
-            <p class="description">バンド一覧を押します</p>
-            <img src="{{ url_for('static', filename='images/02.png') }}" alt="手順2の画像">
-          </div>
-        </li>
-        <li>
-          <div class="step">
-            <p class="description">新しいバンドを作成します（バンドを作成する場合）<br>参加する場合は招待リンクを送ってもらってください</p>
-            <img src="{{ url_for('static', filename='images/03.png') }}" alt="手順3の画像">
-          </div>
-        </li>
-        <li>
-          <div class="step">
-            <p class="description">トップに戻ります（左上タップ）<br>"予定管理"を押します</p>
-            <img src="{{ url_for('static', filename='images/01.png') }}" alt="手順1の画像">
-          </div>
-        </li>
-        <li>
-          <div class="step">
-            <p class="description">いける日にチェックします<br>横軸・縦軸をタップすれば一括でいける</p>
-            <img src="{{ url_for('static', filename='images/04.png') }}" alt="手順4の画像">
-          </div>
-        </li>
-        <li>
-          <div class="step">
-            <p class="description">適用したいバンドを選択し、デフォルトを適用を押します<br>バンドごとにチェックのつけ外しをすることで個別設定もできます</p>
-            <img src="{{ url_for('static', filename='images/05.png') }}" alt="手順5の画像">
-          </div>
-        </li>
-        <li>
-          <div class="step">
-            <p class="description">デフォルトを適用を押した写真ですね</p>
-            <img src="{{ url_for('static', filename='images/06.png') }}" alt="手順6の画像">
-          </div>
-        </li>
-        <li>
-          <div class="step">
-            <p class="description">一番下から備考入力できるってよ</p>
-            <img src="{{ url_for('static', filename='images/07.png') }}" alt="手順7の画像">
-          </div>
-        </li>
-        <li>
-          <div class="step">
-            <p class="description">こんな感じに表示される</p>
-            <img src="{{ url_for('static', filename='images/08.png') }}" alt="手順8の画像">
-          </div>
-        </li>
-      </ul>
+  <main class="usage-container">
+    <header class="usage-header">
+      <h1>Jappy 使い方ガイド</h1>
+      <p>Jappyは、バンドメンバー間のスケジュール調整を驚くほど簡単にするためのウェブアプリです。</p>
+    </header>
+
+    <!-- STEP 1: ログインと初期設定 -->
+    <section class="usage-section">
+      <h2 class="section-title"><span>STEP 1</span> ログインと初期設定</h2>
+      <div class="section-content">
+        <p>
+          まずはGoogleアカウントで簡単にログインします。初回ログイン時のみ、アプリ内で使用するニックネームの登録が必要です。
+        </p>
+      </div>
     </section>
+
+    <!-- STEP 2: バンドの作成と参加 -->
+    <section class="usage-section">
+      <h2 class="section-title"><span>STEP 2</span> バンドの作成と参加</h2>
+      <div class="section-content">
+        <h3>バンドを作成する場合</h3>
+        <ol class="step-list">
+          <li>ヘッダーのメニューから「バンド一覧」へ移動します。</li>
+          <li>「新しいバンドを作成する」ボタンを押し、バンド名、活動の期間、主な活動時間帯を設定すれば作成完了です。</li>
+          <li>作成後、「参加バンド一覧」ページに表示されるカードの<strong>コピーアイコン</strong>をクリックすると、メンバーへの招待用URLがコピーできます。</li>
+        </ol>
+        <h3>バンドに参加する場合</h3>
+        <p>
+          メンバーから共有された招待用URLにアクセスするだけで、バンドに参加できます。
+        </p>
+      </div>
+    </section>
+
+    <!-- STEP 3: スケジュールの提出 -->
+    <section class="usage-section">
+      <h2 class="section-title"><span>STEP 3</span> スケジュールの提出</h2>
+      <div class="section-content">
+        <p>
+          ヘッダーのメニューから「スケジュール管理」ページに移動して、あなたの空き時間を提出します。
+        </p>
+        <ol class="step-list">
+          <li>
+            <strong>デフォルトの予定を登録：</strong>
+            最初に「デフォルト」スケジュールに、あなたの基本的な空き時間を登録することをお勧めします。
+          </li>
+          <li>
+            <strong>バンドごとの予定を調整：</strong>
+            プルダウンメニューからバンドを選択し、そのバンド用のスケジュールを調整します。「デフォルトを適用」ボタンを使えば、基本の空き時間を一括で反映できて便利です。
+          </li>
+          <li>
+            <strong>備考欄の活用：</strong>
+            バンドのスケジュール画面では、メンバーに伝えたいこと（遅刻や早退など）を備考欄に入力できます。
+          </li>
+        </ol>
+        <p class="notice">
+          スケジュールは自動で保存されるので、保存ボタンを押す必要はありません。日付や時間をクリックすると、その列・行の時間を一括で選択できます。
+        </p>
+      </div>
+    </section>
+
+    <!-- STEP 4: みんなの予定を確認 -->
+    <section class="usage-section">
+      <h2 class="section-title"><span>STEP 4</span> みんなの予定を確認</h2>
+      <div class="section-content">
+        <p>
+          「バンド一覧」ページでバンド名をクリックすると、メンバー全員のスケジュールを自動で集計した結果が表示されます。
+        </p>
+        <ul>
+          <li>色が濃い時間帯ほど、多くのメンバーが参加可能です。</li>
+          <li>各時間帯のマスにカーソルを合わせる（またはタップする）と、参加できるメンバーの名前が表示されます。</li>
+          <li>ページ下部には、各メンバーが入力した備考も一覧で表示されます。</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- STEP 5: バンド練習日を管理 -->
+    <section class="usage-section">
+      <h2 class="section-title"><span>STEP 5</span> バンド練習日を管理 (応用編)</h2>
+      <div class="section-content">
+        <p>
+          ヘッダーのメニューから「バンド練管理」ページに移動すると、確定した練習の予定を管理できます。
+        </p>
+        <ul>
+          <li>
+            <strong>全体閲覧モード：</strong>
+            自分が所属する全てのバンドの練習日を、一つのカレンダーでまとめて確認できます。
+          </li>
+          <li>
+            <strong>編集モード：</strong>
+            プルダウンメニューからバンドを選択すると、そのバンドの練習日をカレンダーに直接書き込めます。
+          </li>
+        </ul>
+      </div>
+    </section>
+
   </main>
 
 </body>
