@@ -14,7 +14,6 @@
     <h2>参加バンド一覧</h2>
     <p>あなたが参加しているバンドの一覧です。<br>新しいメンバーを招待するには、招待URLをコピーして共有してください。</p>
 
-    {# flashメッセージの表示 #}
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
         <div class="flash-messages">
@@ -28,7 +27,6 @@
     <div class="band-list">
       {% if bands %}
         {% for band in bands %}
-          {# ★ data-token 属性を追加 #}
           <div class="band-card" data-token="{{ band.token }}">
             <div class="band-info">
               <h3 class="band-name">{{ band.name }}</h3>

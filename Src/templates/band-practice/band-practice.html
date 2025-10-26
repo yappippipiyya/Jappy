@@ -52,7 +52,6 @@
             {% for day in dates %}
             <td class="schedule-cell">
               {% if view_mode %}
-                {# --- 閲覧モード --- #}
                 {% for band in bands %}
                   {% if band_schedules.get(band.id) and band_schedules[band.id].get(day.isoformat()) and band_schedules[band.id][day.isoformat()][hour] == 1 %}
                     <div class="practice-slot" style="background-color: {{ band_colors[band.id] }};" title="{{ band.name }}">
@@ -61,7 +60,6 @@
                   {% endif %}
                 {% endfor %}
               {% else %}
-                {# --- 編集モード --- #}
                 <input
                   type="checkbox"
                   class="schedule-checkbox"

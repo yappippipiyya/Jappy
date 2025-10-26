@@ -9,7 +9,6 @@
 </head>
 
 <body>
-  <!-- 警告メッセージの表示 - bodyの直下で、他のコンテンツから独立して配置 -->
   <div class="flash-message-container">
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
@@ -22,11 +21,9 @@
     {% endwith %}
   </div>
 
-  <!-- ロゴとログインボタンをまとめるラッパー -->
   <div class="main-content-wrapper">
     <img src="{{ url_for('static', filename='icons/jappy.png') }}" alt="ロゴ" class="logo-image">
 
-    <!-- LINEでログインボタン -->
     <div class="container">
       <div class="login-box">
         <button id="login-btn" class="btn btn-lg">

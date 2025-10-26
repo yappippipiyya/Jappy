@@ -40,7 +40,7 @@
       <table class="schedule-table">
         <thead>
           <tr>
-            <th class="corner-cell">時間</th> <!-- 角のセル -->
+            <th class="corner-cell">時間</th>
             {% for day in dates %}
             {% set weekdays = ['月', '火', '水', '木', '金', '土', '日'] %}
             <th class="date-header" data-date="{{ day.isoformat() }}">
@@ -58,7 +58,7 @@
               <span class="time-short">{{ hour }}</span>
             </td>
             {% for day in dates %}
-            <td class="schedule-cell"> <!-- チェックボックスを含むセル -->
+            <td class="schedule-cell">
               <input
                 type="checkbox"
                 class="schedule-checkbox"
