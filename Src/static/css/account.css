@@ -1,0 +1,146 @@
+/*
+ * ----------------------------------------------------------------
+ * 色定義 (既存のCSSから必要なものを抜粋・追加)
+ * ----------------------------------------------------------------
+ */
+:root {
+  --text-color: #333;
+  --primary-button-bg: #007bff;
+  --primary-button-text: #ffffff;
+  --danger-button-bg: #dc3545;
+  --danger-button-text: #ffffff;
+  --danger-zone-border: #dc3545;
+  --input-bg: #ffffff;
+  --input-border: #ced4da;
+  --section-bg: #ffffff;
+  --section-border: #e0e0e0;
+  --section-shadow: rgba(0, 0, 0, 0.05);
+}
+
+:root[theme="dark"] {
+  --text-color: #e8e8e8;
+  --primary-button-bg: #007bff;
+  --danger-button-bg: #c82333;
+  --danger-zone-border: #c82333;
+  --input-bg: #333;
+  --input-border: #4d4d4d;
+  --section-bg: #2c2c2c;
+  --section-border: #444;
+  --section-shadow: rgba(0, 0, 0, 0.2);
+}
+
+/*
+ * ----------------------------------------------------------------
+ * 基本レイアウト
+ * ----------------------------------------------------------------
+ */
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.page-title {
+  text-align: center;
+  margin-bottom: 2rem;
+  font-weight: 600;
+}
+
+/*
+ * ----------------------------------------------------------------
+ * セクションのスタイル
+ * ----------------------------------------------------------------
+ */
+.account-section {
+  background-color: var(--section-bg);
+  border: 1px solid var(--section-border);
+  border-radius: 8px;
+  padding: 25px;
+  margin-bottom: 25px;
+  box-shadow: 0 2px 8px var(--section-shadow);
+}
+
+.account-section h2 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--section-border);
+}
+
+/*
+ * ----------------------------------------------------------------
+ * フォームのスタイル
+ * ----------------------------------------------------------------
+ */
+.account-form .form-group {
+  margin-bottom: 20px;
+}
+
+.account-form label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.account-form input[type="text"] {
+  width: 100%;
+  padding: 12px;
+  font-size: 1rem;
+  border: 1px solid var(--input-border);
+  border-radius: 5px;
+  background-color: var(--input-bg);
+  color: var(--text-color);
+  box-sizing: border-box;
+}
+
+/*
+ * ----------------------------------------------------------------
+ * ボタンのスタイル
+ * ----------------------------------------------------------------
+ */
+.btn {
+  display: inline-block;
+  width: 100%;
+  padding: 12px 20px;
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+  box-sizing: border-box;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn-primary {
+  background-color: var(--primary-button-bg);
+  color: var(--primary-button-text);
+}
+
+.btn-danger {
+  background-color: var(--danger-button-bg);
+  color: var(--danger-button-text);
+}
+
+/*
+ * ----------------------------------------------------------------
+ * 危険ゾーンのスタイル
+ * ----------------------------------------------------------------
+ */
+.danger-zone {
+  border-color: var(--danger-zone-border);
+  border-width: 1.5px;
+}
+
+.danger-zone h2 {
+  color: var(--danger-zone-border);
+}
+
+.danger-zone p {
+  line-height: 1.7;
+  margin-bottom: 20px;
+}

@@ -86,6 +86,20 @@ class ScheduleDatabaseManager:
       return None
 
 
+  def delete_schedules(self, user_id: int) -> bool:
+    """指定されたユーザーIDのスケジュールをすべて削除する"""
+    sql = "DELETE FROM schedules WHERE user_id = %s;"
+    try:
+      with self._get_connection() as conn:
+        with conn.cursor() as cur:
+          cur.execute(sql, (user_id,))
+          conn.commit()
+          return True
+    except psycopg.Error as e:
+      print(f"データベースエラーが発生しました: {e}")
+      return False
+
+
   def _serialize_schedule(self, schedule: dict[date, list[Literal[0, 1]]]) -> str:
     """schedule辞書をJSON文字列にシリアライズする"""
     if not isinstance(schedule, dict):

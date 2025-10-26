@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  {% include "head.html" %}
+
+  <title>アカウント設定</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/account.css') }}">
+</head>
+
+<body>
+  {% include "header.html" %}
+
+  <main class="container">
+    <h1 class="page-title">アカウント設定</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+
+    <!-- ユーザー名変更フォーム -->
+    <section class="account-section">
+      <h2>ユーザー名変更</h2>
+      <form action="{{ url_for('account') }}" method="post" class="account-form">
+        <div class="form-group">
+          <label for="nickname">新しいユーザー名</label>
+          <input type="text" id="nickname" name="nickname" value="{{ user.name }}" placeholder="新しいユーザー名を入力" required>
+        </div>
+        <button type="submit" class="btn btn-primary">更新する</button>
+      </form>
+    </section>
+
+    <!-- アカウント削除セクション -->
+    <section class="account-section danger-zone">
+      <h2>アカウント削除</h2>
+      <p>この操作は元に戻せません。アカウントを削除すると、関連するすべてのデータが完全に削除されます。</p>
+      <form id="delete-account-form" action="{{ url_for('delete_account') }}" method="post">
+          <button type="submit" class="btn btn-danger">アカウントを削除する</button>
+      </form>
+    </section>
+  </main>
+
+  <script>
+    document.getElementById('delete-account-form').addEventListener('submit', function(event) {
+      event.preventDefault();
+      const confirmation = window.confirm('本当にアカウントを削除しますか？この操作は取り消せません。');
+      if (confirmation) {
+        event.target.submit();
+      }
+    });
+  </script>
+</body>
+</html>

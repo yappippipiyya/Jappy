@@ -6,6 +6,8 @@ from flask_login import login_user, logout_user, login_required, current_user
 from ..app_init_ import app
 from ..auth import flow, User
 from ..db.user import UserDatabaseManager
+from ..db.band import BandDatabaseManager
+from ..db.schedule import ScheduleDatabaseManager
 
 from const import GOOGLE_CLIENT_ID
 
@@ -99,3 +101,65 @@ def resist():
 @login_required
 def usage():
   return render_template("usage.html")
+
+
+@app.route("/account", methods=["GET", "POST"])
+@login_required
+def account():
+  user_db = UserDatabaseManager()
+  user_email = current_user.get_id()
+  user = user_db.get_user(email=user_email)
+
+  if not user:
+    return redirect(url_for("resist"))
+
+  if request.method == "POST":
+    new_nickname = request.form.get("nickname", "").strip()
+
+    if not new_nickname:
+      flash("新しいニックネームを入力してください。", "error")
+      return redirect(url_for("account"))
+
+    if new_nickname == user.name:
+      flash("現在のニックネームと同じです。", "info")
+      return redirect(url_for("account"))
+
+    success = user_db.update(user_id=user.id, email=user.email, name=new_nickname)
+
+    if success:
+      flash("ニックネームを更新しました。", "success")
+    else:
+      flash("更新中にエラーが発生しました。もう一度お試しください。", "error")
+
+    return redirect(url_for("account"))
+
+  return render_template("account.html", user=user)
+
+
+@app.route("/delete-account", methods=["POST"])
+@login_required
+def delete_account():
+  user_db = UserDatabaseManager()
+  user_email = current_user.get_id()
+  user = user_db.get_user(email=user_email)
+
+  if not user:
+    abort(404)
+
+  success = user_db.delete(user_id=user.id)
+
+  band_db = BandDatabaseManager()
+  bands = band_db.get_bands(user.id)
+  for band in bands:
+    band_db.delete_band(band.id)
+
+  schedule_db = ScheduleDatabaseManager()
+  schedule_db.delete_schedules(user.id)
+
+  if success:
+    logout_user()
+    flash("アカウントを削除しました。", "success")
+    return redirect(url_for("index"))
+  else:
+    flash("アカウントの削除中にエラーが発生しました。", "error")
+    return redirect(url_for("account"))
