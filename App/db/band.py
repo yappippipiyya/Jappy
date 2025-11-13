@@ -221,7 +221,7 @@ class BandDatabaseManager:
       print(f"データベースエラーが発生しました (get_bands): {e}")
 
     bands_list.sort(key=lambda x: x.end_date, reverse=True)
-    print(bands_list)
+
     return bands_list
 
 
