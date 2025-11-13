@@ -1,17 +1,13 @@
 from flask import flash, redirect, url_for
 from flask_login import LoginManager, UserMixin
 from google_auth_oauthlib.flow import Flow
-from werkzeug.middleware.proxy_fix import ProxyFix
 from datetime import timedelta
 
 from .app_init_ import app
 from const import GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, REDIRECT_URI, SECRET_KEY
 
 app.secret_key = SECRET_KEY
-app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=30)
-app.config['SESSION_COOKIE_SAMESITE'] = 'None'
-app.config['SESSION_COOKIE_SECURE'] = True
 
 client_config = {
   "web": {
