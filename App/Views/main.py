@@ -30,10 +30,10 @@ def login():
 
 @app.route('/callback')
 def callback():
-  flow.fetch_token(authorization_response=request.url)
-
-  if not session['state'] == request.args['state']:
+  if 'state' not in session or session['state'] != request.args.get('state'):
     abort(400, "State mismatch error")
+
+  flow.fetch_token(authorization_response=request.url)
 
   credentials = flow.credentials
   request_session = google_requests.Request()
