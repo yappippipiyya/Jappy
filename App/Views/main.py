@@ -25,15 +25,28 @@ def index():
 def login():
   authorization_url, state = flow.authorization_url()
   session['state'] = state
+  app.logger.info(f"State saved to session in /login: {session['state']}")
   return redirect(authorization_url)
 
 
 @app.route('/callback')
 def callback():
-  if 'state' not in session or session['state'] != request.args.get('state'):
-    abort(400, "State mismatch error")
+  session_state = session.get('state')
+  request_state = request.args.get('state')
+  app.logger.info(f"Callback received. Session state: {session_state}")
+  app.logger.info(f"Callback received. Request state: {request_state}")
+  app.logger.info(f"Full session content in /callback: {session}")
 
-  flow.fetch_token(authorization_response=request.url)
+  if not session_state or session_state != request_state:
+    app.logger.error("State mismatch detected before fetching token!")
+    abort(400, "State mismatch error. Please try logging in again.")
+
+  try:
+    flow.fetch_token(authorization_response=request.url)
+  except Exception as e:
+    app.logger.error(f"Error during fetch_token: {e}")
+    app.logger.error(f"Session state at time of error: {session.get('state')}")
+    raise
 
   credentials = flow.credentials
   request_session = google_requests.Request()
