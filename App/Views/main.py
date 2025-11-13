@@ -42,7 +42,10 @@ def callback():
     abort(400, "State mismatch error. Please try logging in again.")
 
   try:
-    flow.fetch_token(authorization_response=request.url)
+    flow.fetch_token(
+      authorization_response=request.url,
+      state=session['state']
+    )
   except Exception as e:
     app.logger.error(f"Error during fetch_token: {e}")
     app.logger.error(f"Session state at time of error: {session.get('state')}")
