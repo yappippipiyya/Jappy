@@ -91,15 +91,34 @@
         <a href="{{ url_for('band_edit', token=band.token) }}" class="btn-action btn-edit">
           バンド情報を編集する
         </a>
+      {% endif %}
+      {% if not band.archived %}
+        <form action="{{ url_for('band_archive') }}" method="POST">
+          <input type="hidden" name="token" value="{{ band.token }}">
+          <button type="submit" class="btn-action btn-archive">
+            バンドをアーカイブする
+          </button>
+        </form>
+      {% endif %}
+      {% if band.archived %}
+        <form action="{{ url_for('band_unarchive') }}" method="POST">
+          <input type="hidden" name="token" value="{{ band.token }}">
+          <button type="submit" class="btn-action btn-unarchive">
+            アーカイブを解除する
+          </button>
+        </form>
+      {% endif %}
+      {% if is_creator %}
         <form action="{{ url_for('band_delete') }}" method="POST" id="delete-band-form">
           <input type="hidden" name="token" value="{{ band.token }}">
           <button type="submit" class="btn-action btn-delete">
             バンドを削除する
           </button>
         </form>
-      {% else %}
+      {% endif %}
+      {% if not is_creator %}
         <form action="{{ url_for('band_leave') }}" method="POST">
-          <input type="hidden" name="token" value="{{ band.token }}">
+        <input type="hidden" name="token" value="{{ band.token }}">
           <button type="submit" class="btn-action btn-leave">
             バンドから退出する
           </button>

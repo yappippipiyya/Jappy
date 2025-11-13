@@ -249,6 +249,50 @@ def band_leave():
   return redirect(url_for('bands_list'))
 
 
+@app.route("/band/archive", methods=["POST"])
+@login_required
+def band_archive():
+  """所属しているバンドをアーカイブする"""
+  token = request.form.get('token')
+  if not token:
+    abort(400)
+
+  user_db = UserDatabaseManager()
+  band_db = BandDatabaseManager()
+  user = user_db.get_user(email=current_user.get_id())
+  band = band_db.get_band(token=token)
+
+  if not user or not band:
+    abort(404)
+
+  band_db.update_band_archive_status(band.id, archive=True)
+
+  flash(f"バンド「{band.name}」をアーカイブしました。", "success")
+  return redirect(url_for('bands_list'))
+
+
+@app.route("/band/unarchive", methods=["POST"])
+@login_required
+def band_unarchive():
+  """所属しているバンドをアーカイブする"""
+  token = request.form.get('token')
+  if not token:
+    abort(400)
+
+  user_db = UserDatabaseManager()
+  band_db = BandDatabaseManager()
+  user = user_db.get_user(email=current_user.get_id())
+  band = band_db.get_band(token=token)
+
+  if not user or not band:
+    abort(404)
+
+  band_db.update_band_archive_status(band.id, archive=False)
+
+  flash(f"バンド「{band.name}」のアーカイブを解除しました。", "success")
+  return redirect(url_for('bands_list'))
+
+
 @app.route("/band/delete", methods=["POST"])
 @login_required
 def band_delete():

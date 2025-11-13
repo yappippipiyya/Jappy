@@ -12,7 +12,7 @@ class Band:
 
   def __init__(
     self, id: int, name: str, creator_user_id: int, token: str,
-    start_date: date, end_date: date, start_time: time, end_time: time
+    start_date: date, end_date: date, start_time: time, end_time: time, archived: bool,
   ):
     self.id = id
     self.name = name
@@ -22,13 +22,14 @@ class Band:
     self.end_date = end_date
     self.start_time = start_time
     self.end_time = end_time
+    self.archived = archived
 
   def __repr__(self):
     return (
       f"Band(id={self.id}, name='{self.name}', "
       f"creator_user_id='{self.creator_user_id}', token='{self.token}', "
       f"start_date='{self.start_date}', end_date='{self.end_date}', "
-      f"start_time='{self.start_time}', end_time='{self.end_time}')"
+      f"start_time='{self.start_time}', end_time='{self.end_time}', archived='{self.archived})"
     )
 
 
@@ -97,6 +98,28 @@ class BandDatabaseManager:
           cur.execute(sql, (
             name, start_date, end_date,
             start_time, end_time, band_id
+          ))
+          conn.commit()
+          # 1行以上更新されていれば成功
+          return cur.rowcount > 0
+
+    except psycopg.Error as e:
+      print(f"データベースエラーが発生しました (update_band): {e}")
+      return False
+
+
+  def update_band_archive_status(self, band_id: int, archive: bool) -> bool:
+    """指定されたバンドIDをアーカイブ/解除する"""
+    sql = """
+      UPDATE bands
+      SET archived = %s
+      WHERE id = %s;
+    """
+    try:
+      with self._get_connection() as conn:
+        with conn.cursor() as cur:
+          cur.execute(sql, (
+            archive, band_id
           ))
           conn.commit()
           # 1行以上更新されていれば成功
@@ -220,7 +243,7 @@ class BandDatabaseManager:
     except psycopg.Error as e:
       print(f"データベースエラーが発生しました (get_bands): {e}")
 
-    bands_list.sort(key=lambda x: x.end_date, reverse=True)
+    bands_list.sort(key=lambda x: (not x.archived, x.end_date), reverse=True)
 
     return bands_list
 

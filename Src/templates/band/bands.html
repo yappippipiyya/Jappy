@@ -27,7 +27,7 @@
     <div class="band-list">
       {% if bands %}
         {% for band in bands %}
-          <div class="band-card" data-token="{{ band.token }}">
+          <div class="band-card" data-token="{{ band.token }}" isArchived="{{ band.archived }}">
             <div class="band-info">
               <h3 class="band-name">{{ band.name }}</h3>
               <p class="band-period">
@@ -41,12 +41,14 @@
               </p>
             </div>
             <div class="band-actions">
-              <div class="url-copy-wrapper">
-                <input type="text" value="{{ request.url_root }}join?token={{ band.token }}&openExternalBrowser=1" readonly>
-                <button class="copy-btn" title="招待URLをコピー">
-                  <span class="material-icons">content_copy</span>
-                </button>
-              </div>
+              {% if not band.archived %}
+                <div class="url-copy-wrapper">
+                  <input type="text" value="{{ request.url_root }}join?token={{ band.token }}&openExternalBrowser=1" readonly>
+                  <button class="copy-btn" title="招待URLをコピー">
+                    <span class="material-icons">content_copy</span>
+                  </button>
+                </div>
+              {% endif %}
               <p class="copy-feedback"></p>
             </div>
           </div>

@@ -36,6 +36,8 @@
   --btn-edit-background-hover-color: #2980b9;
   --btn-leave-background-color: #f39c12;
   --btn-delete-background-color: #e74c3c;
+  --btn-archive-background-color: #f67c35;
+  --btn-unarchive-background-color: #f67c35;
 }
 
 :root[theme="dark"] {
@@ -71,6 +73,8 @@
   --btn-edit-background-hover-color: #2980b9;
   --btn-leave-background-color: #f39c12;
   --btn-delete-background-color: #e74c3c;
+  --btn-archive-background-color: #f67c35;
+  --btn-unarchive-background-color: #f67c35;
 }
 
 
@@ -302,6 +306,12 @@
   }
   .btn-delete {
     background-color: var(--btn-delete-background-color);
+  }
+  .btn-archive {
+    background-color: var(--btn-archive-background-color);
+  }
+  .btn-unarchive {
+    background-color: var(--btn-unarchive-background-color);
   }
 }
 

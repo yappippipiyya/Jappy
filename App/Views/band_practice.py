@@ -31,7 +31,8 @@ def band_practice():
     flash("ユーザー情報が見つかりません。", "error")
     return redirect(url_for("top"))
 
-  user_bands = band_db_manager.get_bands(user.id)
+  bands_list = band_db_manager.get_bands(user.id)
+  user_bands = [band for band in bands_list if not band.archived]
 
   # クエリパラメータから表示対象を取得 ("view" または band_id)
   selected_band_id_str = request.args.get("band_id", "view")

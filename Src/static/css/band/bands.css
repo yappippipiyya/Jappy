@@ -22,6 +22,8 @@
   --card-border-color: #e0e0e0;
   --card-shadow-hover-color: rgba(0, 0, 0, 0.08);
   --card-title-color: #34495e;
+  --card-archived-background-color: #e7e7e7;
+  --card-archived-text-color: #9e9e9e;
 
   /* アクション要素 */
   --icon-color: #757575;
@@ -52,6 +54,8 @@
   --card-border-color: #555;
   --card-shadow-hover-color: rgba(0, 0, 0, 0.25);
   --card-title-color: #e8e8e8;
+  --card-archived-background-color: #434343;
+  --card-archived-text-color: #7a7a7a;
 
   /* アクション要素 */
   --icon-color: #b0b0b0;
@@ -135,7 +139,7 @@
   border: 1px solid var(--card-border-color);
   border-radius: 8px;
   cursor: pointer;
-  transition: box-shadow 0.2s ease-in-out;
+  transition: box-shadow 0.2s ease-in-out, background-color 0.2s, opacity 0.2s;
 
   &:hover {
     box-shadow: 0 4px 12px var(--card-shadow-hover-color);
@@ -213,6 +217,21 @@
     }
   }
 }
+
+/*
+ * ----------------------------------------------------------------
+ * アーカイブされたバンドのスタイル
+ * ----------------------------------------------------------------
+ */
+.band-card[isArchived="True"] {
+  background-color: var(--card-archived-background-color);
+
+  .band-info .band-name,
+  .band-info p {
+    color: var(--card-archived-text-color);
+  }
+}
+
 
 /*
  * ----------------------------------------------------------------
